@@ -164,36 +164,37 @@
 
 .grid-container {
   display: grid;
-  gap: 1.5rem;
   padding: 3rem;
   background: #f8f9fa;
   border-radius: 16px;
   border: 1px solid #e5e7eb;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  max-width: 90vw;
-  max-height: 70vh;
+  width: 600px;
+  height: 600px;
+  place-items: center;
+  transition: none;
 }
 
 .node-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: none;
 }
 
 .node {
-  width: 60px;
-  height: 60px;
   border-radius: 50%;
   background: #3b82f6;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
-  transition: all 0.3s ease;
   cursor: pointer;
+  transition: none;
 }
 
 .node:hover {
   transform: scale(1.1);
   background: #2563eb;
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* Tablet Styles */
@@ -229,13 +230,10 @@
   }
 
   .grid-container {
-    gap: 1.5rem;
+    width: 500px;
+    height: 500px;
     padding: 2rem;
-  }
-
-  .node {
-    width: 50px;
-    height: 50px;
+    gap: 0.75rem;
   }
 }
 
@@ -280,13 +278,12 @@
   }
 
   .grid-container {
-    gap: 1rem;
+    width: 90vw;
+    height: 90vw;
+    max-width: 400px;
+    max-height: 400px;
     padding: 1.5rem;
-  }
-
-  .node {
-    width: 45px;
-    height: 45px;
+    gap: 0.5rem;
   }
 }
 
@@ -297,8 +294,9 @@
     font-size: 0.85rem;
   }
 
-  .node {
-    width: 38px;
-    height: 38px;
+  .grid-container {
+    width: 85vw;
+    height: 85vw;
+    padding: 1rem;
   }
 }

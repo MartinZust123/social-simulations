@@ -1,10 +1,26 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import './App.css'
 
 function App() {
   const [activeTab, setActiveTab] = useState('simulate');
   const [gridSize, setGridSize] = useState(4);
-  const nodes = Array.from({ length: gridSize * gridSize }, (_, i) => i);
+
+  // Memoize all calculations to prevent partial renders
+  const gridConfig = useMemo(() => {
+    const nodes = Array.from({ length: gridSize * gridSize }, (_, i) => i);
+
+    // Calculate node size and gap dynamically
+    const containerSize = 600 - 96; // 600px - 3rem padding on both sides (3rem * 2 = 96px)
+
+    // Use 15% of available space per cell for gaps, rest for nodes
+    const cellSize = containerSize / gridSize;
+    const gapSize = Math.max(8, Math.min(cellSize * 0.15, 24)); // Gap between 8px and 24px
+    const totalGapSpace = gapSize * (gridSize - 1);
+    const availableSpace = containerSize - totalGapSpace;
+    const nodeSize = Math.floor(availableSpace / gridSize);
+
+    return { nodes, gapSize, nodeSize };
+  }, [gridSize]);
 
   return (
     <div className="app">
@@ -58,12 +74,19 @@ function App() {
           className="grid-container"
           style={{
             gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-            gridTemplateRows: `repeat(${gridSize}, 1fr)`
+            gridTemplateRows: `repeat(${gridSize}, 1fr)`,
+            gap: `${gridConfig.gapSize}px`
           }}
         >
-          {nodes.map((node) => (
+          {gridConfig.nodes.map((node) => (
             <div key={node} className="node-wrapper">
-              <div className="node"></div>
+              <div
+                className="node"
+                style={{
+                  width: `${gridConfig.nodeSize}px`,
+                  height: `${gridConfig.nodeSize}px`
+                }}
+              ></div>
             </div>
           ))}
         </div>
