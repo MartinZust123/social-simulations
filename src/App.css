@@ -41,8 +41,8 @@
 }
 
 .nav-button {
-  padding: 0.625rem 1.25rem;
-  font-size: 0.9375rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
   font-weight: 500;
   color: #374151;
   background: transparent;
@@ -56,12 +56,12 @@
 
 .nav-button:hover {
   color: #111827;
-  background: #f3f4f6;
+  background: #eff6ff;
 }
 
 .nav-button.active {
   color: #111827;
-  background: #f3f4f6;
+  background: #eff6ff;
   font-weight: 600;
 }
 
