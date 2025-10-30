@@ -3,7 +3,7 @@ import './App.css'
 
 function App() {
   const [activeTab, setActiveTab] = useState('simulate');
-  const gridSize = 4;
+  const [gridSize, setGridSize] = useState(4);
   const nodes = Array.from({ length: gridSize * gridSize }, (_, i) => i);
 
   return (
@@ -40,7 +40,27 @@ function App() {
       </header>
 
       <main className="main-content">
-        <div className="grid-container">
+        <div className="controls">
+          <label className="control-label">
+            Grid Size: <span className="grid-size-value">{gridSize} × {gridSize}</span>
+          </label>
+          <input
+            type="range"
+            min="3"
+            max="20"
+            value={gridSize}
+            onChange={(e) => setGridSize(Number(e.target.value))}
+            className="slider"
+          />
+        </div>
+
+        <div
+          className="grid-container"
+          style={{
+            gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
+            gridTemplateRows: `repeat(${gridSize}, 1fr)`
+          }}
+        >
           {nodes.map((node) => (
             <div key={node} className="node-wrapper">
               <div className="node"></div>
