@@ -8,16 +8,17 @@ function App() {
   const [isSimulating, setIsSimulating] = useState(false);
   const [stepTime, setStepTime] = useState(0.001); // Step time in seconds
   const [showParameters, setShowParameters] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [q, setQ] = useState(6); // Number of possible values (0 to q-1)
+  const [F, setF] = useState(3); // Number of cultural features
   const intervalRef = useRef(null);
-
-  const F = 3; // Number of features
-  const q = 9; // Number of possible values (0 to q)
+  const tooltipTimeoutRef = useRef(null);
 
   // Randomize cultural features for all nodes
   const randomizeFeatures = () => {
     const features = {};
     for (let i = 0; i < gridSize * gridSize; i++) {
-      features[i] = Array.from({ length: F }, () => Math.floor(Math.random() * (q + 1)));
+      features[i] = Array.from({ length: F }, () => Math.floor(Math.random() * q));
     }
     setNodeFeatures(features);
   };
@@ -32,9 +33,29 @@ function App() {
     const features = nodeFeatures[nodeId];
     if (!features) return '#3b82f6'; // Default blue if not initialized
 
-    const r = Math.floor((features[0] / q) * 255);
-    const g = Math.floor((features[1] / q) * 255);
-    const b = Math.floor((features[2] / q) * 255);
+    let r, g, b;
+
+    if (F === 1) {
+      // Only 1 feature: use it for R, set G and B to middle value
+      r = Math.floor((features[0] / (q - 1)) * 255);
+      g = 128; // 0.5 * 255 ≈ 128
+      b = 128;
+    } else if (F === 2) {
+      // 2 features: use for R and G, set B to middle value
+      r = Math.floor((features[0] / (q - 1)) * 255);
+      g = Math.floor((features[1] / (q - 1)) * 255);
+      b = 128;
+    } else {
+      // F >= 3: average features by modulo 3
+      const avgR = features.filter((_, i) => i % 3 === 0).reduce((sum, val) => sum + val, 0) / features.filter((_, i) => i % 3 === 0).length;
+      const avgG = features.filter((_, i) => i % 3 === 1).reduce((sum, val) => sum + val, 0) / features.filter((_, i) => i % 3 === 1).length;
+      const avgB = features.filter((_, i) => i % 3 === 2).reduce((sum, val) => sum + val, 0) / features.filter((_, i) => i % 3 === 2).length;
+
+      r = Math.floor((avgR / (q - 1)) * 255);
+      g = Math.floor((avgG / (q - 1)) * 255);
+      b = Math.floor((avgB / (q - 1)) * 255);
+    }
+
     return `rgb(${r}, ${g}, ${b})`;
   };
 
@@ -152,7 +173,32 @@ function App() {
 
   // Toggle simulation
   const toggleSimulation = () => {
+    if (!isSimulating) {
+      // Starting simulation - close parameters
+      setShowParameters(false);
+    }
     setIsSimulating(!isSimulating);
+  };
+
+  // Handle parameters toggle with simulation check
+  const handleParametersToggle = () => {
+    if (isSimulating) {
+      // Show tooltip for 5 seconds
+      setShowTooltip(true);
+
+      // Clear existing timeout if any
+      if (tooltipTimeoutRef.current) {
+        clearTimeout(tooltipTimeoutRef.current);
+      }
+
+      // Hide tooltip after 5 seconds
+      tooltipTimeoutRef.current = setTimeout(() => {
+        setShowTooltip(false);
+      }, 5000);
+
+      return;
+    }
+    setShowParameters(!showParameters);
   };
 
   // Effect to handle simulation interval
@@ -241,19 +287,26 @@ function App() {
 
       <main className="main-content">
         <div className="controls">
-          <button
-            className="parameters-toggle"
-            onClick={() => setShowParameters(!showParameters)}
-          >
-            Parameters
-            <svg className="toggle-icon" width="12" height="8" viewBox="0 0 12 8" fill="none">
-              {showParameters ? (
-                <path d="M1 7L6 2L11 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              ) : (
-                <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              )}
-            </svg>
-          </button>
+          <div className="parameters-toggle-wrapper">
+            {showTooltip && (
+              <div className="parameter-tooltip">
+                Parameters cannot be changed during simulation
+              </div>
+            )}
+            <button
+              className={`parameters-toggle ${isSimulating ? 'disabled' : ''}`}
+              onClick={handleParametersToggle}
+            >
+              Parameters
+              <svg className="toggle-icon" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                {showParameters ? (
+                  <path d="M1 7L6 2L11 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                ) : (
+                  <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                )}
+              </svg>
+            </button>
+          </div>
 
           {showParameters && (
             <div className="parameters-panel">
@@ -278,6 +331,28 @@ function App() {
                 step="0.00001"
                 value={stepTime}
                 onChange={(e) => setStepTime(Number(e.target.value))}
+                className="slider"
+              />
+              <label className="control-label">
+                q (Possible States): <span className="grid-size-value">{q}</span>
+              </label>
+              <input
+                type="range"
+                min="2"
+                max="20"
+                value={q}
+                onChange={(e) => setQ(Number(e.target.value))}
+                className="slider"
+              />
+              <label className="control-label">
+                F (Cultural Features): <span className="grid-size-value">{F}</span>
+              </label>
+              <input
+                type="range"
+                min="1"
+                max="20"
+                value={F}
+                onChange={(e) => setF(Number(e.target.value))}
                 className="slider"
               />
             </div>

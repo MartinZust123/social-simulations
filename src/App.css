@@ -206,6 +206,11 @@
   box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
 }
 
+.parameters-toggle-wrapper {
+  width: 100%;
+  position: relative;
+}
+
 .parameters-toggle {
   width: 100%;
   padding: 0.5rem 0;
@@ -225,9 +230,41 @@
   gap: 0.5rem;
 }
 
-.parameters-toggle:hover {
+.parameters-toggle:hover:not(.disabled) {
   color: #374151;
   border-bottom-color: #d1d5db;
+}
+
+.parameters-toggle.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.parameter-tooltip {
+  position: absolute;
+  top: -2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #374151;
+  color: white;
+  padding: 0.5rem 0.875rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.parameter-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background: #374151;
+  transform: translateX(-50%) rotate(45deg);
 }
 
 .toggle-icon {
