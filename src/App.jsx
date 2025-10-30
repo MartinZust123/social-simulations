@@ -13,8 +13,8 @@ function App() {
     const isMobile = window.innerWidth <= 640;
     const isSmallMobile = window.innerWidth <= 400;
 
-    let baseContainerSize = 600;
-    let paddingTotal = 96; // 3rem * 2 = 96px
+    let baseContainerSize = 400;
+    let paddingTotal = 64; // 2rem * 2 = 64px
 
     if (isSmallMobile) {
       baseContainerSize = Math.min(window.innerWidth * 0.85, 350);

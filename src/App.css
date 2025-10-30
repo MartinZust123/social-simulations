@@ -164,13 +164,13 @@
 
 .grid-container {
   display: grid;
-  padding: 3rem;
+  padding: 2rem;
   background: #f8f9fa;
   border-radius: 16px;
   border: 1px solid #e5e7eb;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  width: 600px;
-  height: 600px;
+  width: 400px;
+  height: 400px;
   place-items: center;
   transition: none;
 }
