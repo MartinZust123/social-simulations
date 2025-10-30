@@ -283,7 +283,6 @@
     max-width: 400px;
     max-height: 400px;
     padding: 1.5rem;
-    gap: 0.5rem;
   }
 }
 
@@ -297,6 +296,8 @@
   .grid-container {
     width: 85vw;
     height: 85vw;
+    max-width: 350px;
+    max-height: 350px;
     padding: 1rem;
   }
 }

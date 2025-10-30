@@ -3,18 +3,32 @@ import './App.css'
 
 function App() {
   const [activeTab, setActiveTab] = useState('simulate');
-  const [gridSize, setGridSize] = useState(4);
+  const [gridSize, setGridSize] = useState(10);
 
   // Memoize all calculations to prevent partial renders
   const gridConfig = useMemo(() => {
     const nodes = Array.from({ length: gridSize * gridSize }, (_, i) => i);
 
-    // Calculate node size and gap dynamically
-    const containerSize = 600 - 96; // 600px - 3rem padding on both sides (3rem * 2 = 96px)
+    // Calculate based on viewport - desktop gets 600px, mobile gets smaller
+    const isMobile = window.innerWidth <= 640;
+    const isSmallMobile = window.innerWidth <= 400;
+
+    let baseContainerSize = 600;
+    let paddingTotal = 96; // 3rem * 2 = 96px
+
+    if (isSmallMobile) {
+      baseContainerSize = Math.min(window.innerWidth * 0.85, 350);
+      paddingTotal = 32; // 1rem * 2
+    } else if (isMobile) {
+      baseContainerSize = Math.min(window.innerWidth * 0.9, 400);
+      paddingTotal = 48; // 1.5rem * 2
+    }
+
+    const containerSize = baseContainerSize - paddingTotal;
 
     // Use 15% of available space per cell for gaps, rest for nodes
     const cellSize = containerSize / gridSize;
-    const gapSize = Math.max(8, Math.min(cellSize * 0.15, 24)); // Gap between 8px and 24px
+    const gapSize = Math.max(4, Math.min(cellSize * 0.15, 24)); // Gap between 4px and 24px
     const totalGapSpace = gapSize * (gridSize - 1);
     const availableSpace = containerSize - totalGapSpace;
     const nodeSize = Math.floor(availableSpace / gridSize);
