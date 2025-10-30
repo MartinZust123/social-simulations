@@ -4,6 +4,30 @@ import './App.css'
 function App() {
   const [activeTab, setActiveTab] = useState('simulate');
   const [gridSize, setGridSize] = useState(10);
+  const [nodeFeatures, setNodeFeatures] = useState({});
+
+  const F = 3; // Number of features
+  const q = 9; // Number of possible values (0 to q)
+
+  // Randomize cultural features for all nodes
+  const randomizeFeatures = () => {
+    const features = {};
+    for (let i = 0; i < gridSize * gridSize; i++) {
+      features[i] = Array.from({ length: F }, () => Math.floor(Math.random() * (q + 1)));
+    }
+    setNodeFeatures(features);
+  };
+
+  // Get RGB color from node features
+  const getNodeColor = (nodeId) => {
+    const features = nodeFeatures[nodeId];
+    if (!features) return '#3b82f6'; // Default blue if not initialized
+
+    const r = Math.floor((features[0] / q) * 255);
+    const g = Math.floor((features[1] / q) * 255);
+    const b = Math.floor((features[2] / q) * 255);
+    return `rgb(${r}, ${g}, ${b})`;
+  };
 
   // Memoize all calculations to prevent partial renders
   const gridConfig = useMemo(() => {
@@ -82,6 +106,9 @@ function App() {
             onChange={(e) => setGridSize(Number(e.target.value))}
             className="slider"
           />
+          <button className="randomize-button" onClick={randomizeFeatures}>
+            Randomize
+          </button>
         </div>
 
         <div
@@ -98,7 +125,8 @@ function App() {
                 className="node"
                 style={{
                   width: `${gridConfig.nodeSize}px`,
-                  height: `${gridConfig.nodeSize}px`
+                  height: `${gridConfig.nodeSize}px`,
+                  background: getNodeColor(node)
                 }}
               ></div>
             </div>
