@@ -1,7 +1,39 @@
 import { useState } from 'react';
 
-function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ, F, setF, featureNames, setFeatureNames, valueNames, setValueNames }) {
+function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ, F, setF, featureNames, setFeatureNames, valueNames, setValueNames, simulationMode, interpretableFeatures, setInterpretableFeatures }) {
   const [showNaming, setShowNaming] = useState(false);
+
+  const addFeature = () => {
+    setInterpretableFeatures([...interpretableFeatures, { name: '', states: [''] }]);
+  };
+
+  const removeFeature = (featureIndex) => {
+    setInterpretableFeatures(interpretableFeatures.filter((_, idx) => idx !== featureIndex));
+  };
+
+  const updateFeatureName = (featureIndex, name) => {
+    const updated = [...interpretableFeatures];
+    updated[featureIndex].name = name;
+    setInterpretableFeatures(updated);
+  };
+
+  const addState = (featureIndex) => {
+    const updated = [...interpretableFeatures];
+    updated[featureIndex].states.push('');
+    setInterpretableFeatures(updated);
+  };
+
+  const removeState = (featureIndex, stateIndex) => {
+    const updated = [...interpretableFeatures];
+    updated[featureIndex].states = updated[featureIndex].states.filter((_, idx) => idx !== stateIndex);
+    setInterpretableFeatures(updated);
+  };
+
+  const updateStateName = (featureIndex, stateIndex, name) => {
+    const updated = [...interpretableFeatures];
+    updated[featureIndex].states[stateIndex] = name;
+    setInterpretableFeatures(updated);
+  };
 
   const handleFeatureNameChange = (featureIndex, name) => {
     setFeatureNames(prev => ({
@@ -46,31 +78,94 @@ function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ
           onChange={(e) => setStepTime(Number(e.target.value))}
           className="slider"
         />
-        <label className="control-label">
-          q (Possible States): <span className="grid-size-value">{q}</span>
-        </label>
-        <input
-          type="range"
-          min="2"
-          max="20"
-          value={q}
-          onChange={(e) => setQ(Number(e.target.value))}
-          className="slider"
-        />
-        <label className="control-label">
-          F (Cultural Features): <span className="grid-size-value">{F}</span>
-        </label>
-        <input
-          type="range"
-          min="1"
-          max="20"
-          value={F}
-          onChange={(e) => setF(Number(e.target.value))}
-          className="slider"
-        />
+        {simulationMode === 'basic' && (
+          <>
+            <label className="control-label">
+              q (Possible States): <span className="grid-size-value">{q}</span>
+            </label>
+            <input
+              type="range"
+              min="2"
+              max="20"
+              value={q}
+              onChange={(e) => setQ(Number(e.target.value))}
+              className="slider"
+            />
+            <label className="control-label">
+              F (Cultural Features): <span className="grid-size-value">{F}</span>
+            </label>
+            <input
+              type="range"
+              min="1"
+              max="20"
+              value={F}
+              onChange={(e) => setF(Number(e.target.value))}
+              className="slider"
+            />
+          </>
+        )}
       </div>
 
-      <div className="naming-section">
+      {simulationMode === 'interpretable' && (
+        <div className="interpretable-features-section">
+          {interpretableFeatures.map((feature, featureIdx) => (
+            <div key={featureIdx} className="interpretable-feature-card">
+              <div className="interpretable-feature-header">
+                <input
+                  type="text"
+                  className="interpretable-feature-name-input"
+                  placeholder="Feature name (e.g., Religion)"
+                  value={feature.name}
+                  onChange={(e) => updateFeatureName(featureIdx, e.target.value)}
+                />
+                {interpretableFeatures.length > 1 && (
+                  <button
+                    className="remove-feature-button"
+                    onClick={() => removeFeature(featureIdx)}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+              <div className="interpretable-states-list">
+                {feature.states.map((state, stateIdx) => (
+                  <div key={stateIdx} className="interpretable-state-item">
+                    <input
+                      type="text"
+                      className="interpretable-state-input"
+                      placeholder="State name"
+                      value={state}
+                      onChange={(e) => updateStateName(featureIdx, stateIdx, e.target.value)}
+                    />
+                    {feature.states.length > 1 && (
+                      <button
+                        className="remove-state-button"
+                        onClick={() => removeState(featureIdx, stateIdx)}
+                      >
+                        ×
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <div className="add-state-button-wrapper">
+                  <button
+                    className="add-state-button"
+                    onClick={() => addState(featureIdx)}
+                  >
+                    + Add State
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+          <button className="add-feature-button" onClick={addFeature}>
+            + Add Feature
+          </button>
+        </div>
+      )}
+
+      {simulationMode === 'basic' && (
+        <div className="naming-section">
         <button
           className="naming-toggle-button"
           onClick={() => setShowNaming(!showNaming)}
@@ -122,7 +217,8 @@ function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ
             ))}
           </div>
         )}
-      </div>
+        </div>
+      )}
     </>
   );
 }

@@ -25,7 +25,9 @@ function SimulationPage({
   valueNames,
   setValueNames,
   simulationMode,
-  setSimulationMode
+  setSimulationMode,
+  interpretableFeatures,
+  setInterpretableFeatures
 }) {
   const [showParameters, setShowParameters] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -105,6 +107,9 @@ function SimulationPage({
             setFeatureNames={setFeatureNames}
             valueNames={valueNames}
             setValueNames={setValueNames}
+            simulationMode={simulationMode}
+            interpretableFeatures={interpretableFeatures}
+            setInterpretableFeatures={setInterpretableFeatures}
           />
         )}
 
