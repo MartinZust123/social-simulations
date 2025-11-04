@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function SimulationGrid({ gridSize, gridConfig, nodeFeatures, getNodeColor }) {
+function SimulationGrid({ gridSize, gridConfig, nodeFeatures, getNodeColor, featureNames, valueNames }) {
   const [hoveredNode, setHoveredNode] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
@@ -51,14 +51,20 @@ function SimulationGrid({ gridSize, gridConfig, nodeFeatures, getNodeColor }) {
             top: `${tooltipPosition.y}px`
           }}
         >
-          <div className="tooltip-title">Node {hoveredNode}</div>
+          <div className="tooltip-title">Person {hoveredNode}</div>
           <div className="tooltip-features">
-            {Object.entries(nodeFeatures[hoveredNode]).map(([feature, value]) => (
-              <div key={feature} className="tooltip-feature">
-                <span className="tooltip-feature-name">{feature}:</span>
-                <span className="tooltip-feature-value">{value.toFixed(3)}</span>
-              </div>
-            ))}
+            {nodeFeatures[hoveredNode].map((value, featureIdx) => {
+              const featureName = featureNames[featureIdx] || `Feature ${featureIdx}`;
+              const valueName = valueNames[featureIdx]?.[value];
+              const displayValue = valueName ? `${value} (${valueName})` : value;
+
+              return (
+                <div key={featureIdx} className="tooltip-feature">
+                  <span className="tooltip-feature-name">{featureName}:</span>
+                  <span className="tooltip-feature-value">{displayValue}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

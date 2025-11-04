@@ -19,7 +19,11 @@ function SimulationPage({
   getNodeColor,
   gridConfig,
   randomizeFeatures,
-  metrics
+  metrics,
+  featureNames,
+  setFeatureNames,
+  valueNames,
+  setValueNames
 }) {
   const [showParameters, setShowParameters] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -80,6 +84,10 @@ function SimulationPage({
             setQ={setQ}
             F={F}
             setF={setF}
+            featureNames={featureNames}
+            setFeatureNames={setFeatureNames}
+            valueNames={valueNames}
+            setValueNames={setValueNames}
           />
         )}
 
@@ -98,6 +106,8 @@ function SimulationPage({
         gridConfig={gridConfig}
         nodeFeatures={nodeFeatures}
         getNodeColor={getNodeColor}
+        featureNames={featureNames}
+        valueNames={valueNames}
       />
 
       <MetricsDisplay

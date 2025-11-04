@@ -15,6 +15,8 @@ function App() {
   const intervalRef = useRef(null);
   const [stepCount, setStepCount] = useState(0);
   const [metrics, setMetrics] = useState(null);
+  const [featureNames, setFeatureNames] = useState({});
+  const [valueNames, setValueNames] = useState({});
 
   // Randomize cultural features for all nodes
   const randomizeFeatures = () => {
@@ -316,6 +318,10 @@ function App() {
           gridConfig={gridConfig}
           randomizeFeatures={randomizeFeatures}
           metrics={metrics}
+          featureNames={featureNames}
+          setFeatureNames={setFeatureNames}
+          valueNames={valueNames}
+          setValueNames={setValueNames}
         />
       )}
 
