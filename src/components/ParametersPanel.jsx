@@ -4,7 +4,7 @@ function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ
   const [showNaming, setShowNaming] = useState(false);
 
   const addFeature = () => {
-    setInterpretableFeatures([...interpretableFeatures, { name: '', states: [''] }]);
+    setInterpretableFeatures([...interpretableFeatures, { name: '', states: [{ name: '', color: '#3b82f6' }], hasOrder: false }]);
   };
 
   const removeFeature = (featureIndex) => {
@@ -19,7 +19,7 @@ function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ
 
   const addState = (featureIndex) => {
     const updated = [...interpretableFeatures];
-    updated[featureIndex].states.push('');
+    updated[featureIndex].states.push({ name: '', color: '#3b82f6' });
     setInterpretableFeatures(updated);
   };
 
@@ -31,7 +31,19 @@ function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ
 
   const updateStateName = (featureIndex, stateIndex, name) => {
     const updated = [...interpretableFeatures];
-    updated[featureIndex].states[stateIndex] = name;
+    updated[featureIndex].states[stateIndex].name = name;
+    setInterpretableFeatures(updated);
+  };
+
+  const updateStateColor = (featureIndex, stateIndex, color) => {
+    const updated = [...interpretableFeatures];
+    updated[featureIndex].states[stateIndex].color = color;
+    setInterpretableFeatures(updated);
+  };
+
+  const toggleFeatureOrder = (featureIndex) => {
+    const updated = [...interpretableFeatures];
+    updated[featureIndex].hasOrder = !updated[featureIndex].hasOrder;
     setInterpretableFeatures(updated);
   };
 
@@ -127,14 +139,34 @@ function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ
                   </button>
                 )}
               </div>
+              <div className="feature-order-toggle">
+                <label className="order-toggle-label">
+                  <input
+                    type="checkbox"
+                    checked={feature.hasOrder}
+                    onChange={() => toggleFeatureOrder(featureIdx)}
+                    className="order-checkbox"
+                  />
+                  <span className="order-label-text">
+                    States have order (spectrum)
+                  </span>
+                </label>
+              </div>
               <div className="interpretable-states-list">
                 {feature.states.map((state, stateIdx) => (
                   <div key={stateIdx} className="interpretable-state-item">
                     <input
+                      type="color"
+                      className="state-color-picker"
+                      value={state.color}
+                      onChange={(e) => updateStateColor(featureIdx, stateIdx, e.target.value)}
+                      title="Choose color"
+                    />
+                    <input
                       type="text"
                       className="interpretable-state-input"
                       placeholder="State name"
-                      value={state}
+                      value={state.name}
                       onChange={(e) => updateStateName(featureIdx, stateIdx, e.target.value)}
                     />
                     {feature.states.length > 1 && (
