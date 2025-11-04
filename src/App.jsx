@@ -17,6 +17,7 @@ function App() {
   const [metrics, setMetrics] = useState(null);
   const [featureNames, setFeatureNames] = useState({});
   const [valueNames, setValueNames] = useState({});
+  const [simulationMode, setSimulationMode] = useState('basic'); // 'basic' or 'interpretable'
 
   // Randomize cultural features for all nodes
   const randomizeFeatures = () => {
@@ -322,6 +323,8 @@ function App() {
           setFeatureNames={setFeatureNames}
           valueNames={valueNames}
           setValueNames={setValueNames}
+          simulationMode={simulationMode}
+          setSimulationMode={setSimulationMode}
         />
       )}
 
