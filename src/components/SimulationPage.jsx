@@ -33,6 +33,7 @@ function SimulationPage({
 }) {
   const [showParameters, setShowParameters] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isGridInitialized, setIsGridInitialized] = useState(false);
   const tooltipTimeoutRef = useRef(null);
 
   const handleParametersToggle = () => {
@@ -54,6 +55,13 @@ function SimulationPage({
       setShowParameters(false);
     }
     setIsSimulating(!isSimulating);
+  };
+
+  const handleRandomize = () => {
+    randomizeFeatures();
+    if (simulationMode === 'interpretable') {
+      setIsGridInitialized(true);
+    }
   };
 
   return (
@@ -119,7 +127,7 @@ function SimulationPage({
 
         {simulationMode === 'basic' && (
           <div className="button-group">
-            <button className="randomize-button" onClick={randomizeFeatures}>
+            <button className="randomize-button" onClick={handleRandomize}>
               Randomize
             </button>
             <button className="simulate-button" onClick={toggleSimulation}>
@@ -130,9 +138,14 @@ function SimulationPage({
 
         {simulationMode === 'interpretable' && (
           <div className="button-group">
-            <button className="randomize-button" onClick={randomizeFeatures}>
+            <button className="randomize-button" onClick={handleRandomize}>
               Randomize
             </button>
+            {isGridInitialized && (
+              <button className="simulate-button" onClick={toggleSimulation}>
+                {isSimulating ? 'Stop' : 'Simulate'}
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -146,6 +159,8 @@ function SimulationPage({
             getNodeColor={getNodeColor}
             featureNames={featureNames}
             valueNames={valueNames}
+            simulationMode={simulationMode}
+            interpretableFeatures={interpretableFeatures}
           />
 
           <MetricsDisplay
@@ -156,14 +171,23 @@ function SimulationPage({
       )}
 
       {simulationMode === 'interpretable' && (
-        <SimulationGrid
-          gridSize={gridSize}
-          gridConfig={gridConfig}
-          nodeFeatures={nodeFeatures}
-          getNodeColor={getNodeColor}
-          featureNames={featureNames}
-          valueNames={valueNames}
-        />
+        <>
+          <SimulationGrid
+            gridSize={gridSize}
+            gridConfig={gridConfig}
+            nodeFeatures={nodeFeatures}
+            getNodeColor={getNodeColor}
+            featureNames={featureNames}
+            valueNames={valueNames}
+            simulationMode={simulationMode}
+            interpretableFeatures={interpretableFeatures}
+          />
+
+          <MetricsDisplay
+            metrics={metrics}
+            simulationParams={{ gridSize, F: interpretableFeatures.length, q: Math.max(...interpretableFeatures.map(f => f.states.length)), stepTime }}
+          />
+        </>
       )}
     </main>
   );

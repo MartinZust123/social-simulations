@@ -839,6 +839,20 @@
   font-size: 0.875rem;
 }
 
+.tooltip-feature-value-with-color {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tooltip-state-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
 /* Tablet Styles */
 @media (max-width: 968px) {
   .navbar {

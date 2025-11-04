@@ -23,8 +23,114 @@ function App() {
   ]); // For interpretable mode
   const [featureCorrelations, setFeatureCorrelations] = useState({}); // For interpretable mode correlations
 
-  // Randomize cultural features for all nodes
+  // Helper: Convert state index to r value (0 to 1)
+  const indexToR = (index, totalStates) => {
+    if (totalStates === 1) return 0;
+    return index / (totalStates - 1);
+  };
+
+  // Helper: Parse hex color to RGB array
+  const hexToRgb = (hex) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? [
+      parseInt(result[1], 16),
+      parseInt(result[2], 16),
+      parseInt(result[3], 16)
+    ] : [59, 130, 246]; // Default blue
+  };
+
+  // Randomize for Interpretable mode
+  const randomizeInterpretableFeatures = () => {
+    const features = {};
+    const numNodes = gridSize * gridSize;
+
+    for (let nodeId = 0; nodeId < numNodes; nodeId++) {
+      const nodeStates = [];
+
+      // Separate features by type
+      const nonSpectrumFeatures = interpretableFeatures
+        .map((f, idx) => ({ feature: f, index: idx }))
+        .filter(({ feature }) => !feature.hasOrder);
+
+      const spectrumFeatures = interpretableFeatures
+        .map((f, idx) => ({ feature: f, index: idx }))
+        .filter(({ feature }) => feature.hasOrder);
+
+      // Initialize nodeStates array
+      for (let i = 0; i < interpretableFeatures.length; i++) {
+        nodeStates.push(null);
+      }
+
+      // Step 1: Randomly choose non-spectrum features
+      nonSpectrumFeatures.forEach(({ feature, index }) => {
+        const randomStateIndex = Math.floor(Math.random() * feature.states.length);
+        nodeStates[index] = randomStateIndex;
+      });
+
+      // Step 2: Randomly select anchor spectrum feature and its state
+      if (spectrumFeatures.length > 0) {
+        const anchorIdx = Math.floor(Math.random() * spectrumFeatures.length);
+        const anchorFeature = spectrumFeatures[anchorIdx];
+        const anchorStateIndex = Math.floor(Math.random() * anchorFeature.feature.states.length);
+        nodeStates[anchorFeature.index] = anchorStateIndex;
+
+        const anchorR = indexToR(anchorStateIndex, anchorFeature.feature.states.length);
+
+        // Step 3: For other spectrum features, calculate correlated probabilities
+        spectrumFeatures.forEach(({ feature, index }, idx) => {
+          if (idx === anchorIdx) return; // Skip anchor
+
+          const numStates = feature.states.length;
+          const correlationKey = anchorFeature.index < index
+            ? `${anchorFeature.index}-${index}`
+            : `${index}-${anchorFeature.index}`;
+          const correlation = featureCorrelations[correlationKey] ?? 0;
+
+          // Calculate P for each state
+          const probabilities = [];
+          for (let stateIdx = 0; stateIdx < numStates; stateIdx++) {
+            const stateR = indexToR(stateIdx, numStates);
+            const distance = Math.abs(anchorR - stateR);
+            const P = (1 - distance) * (1 + correlation) + distance * (1 - correlation);
+            probabilities.push(P);
+          }
+
+          // Normalize probabilities
+          const sumP = probabilities.reduce((sum, p) => sum + p, 0);
+          const normalizedProbs = sumP > 0
+            ? probabilities.map(p => p / sumP)
+            : probabilities.map(() => 1 / numStates); // Fallback to uniform
+
+          // Choose state based on probability
+          const rand = Math.random();
+          let cumulative = 0;
+          let chosenState = 0;
+          for (let stateIdx = 0; stateIdx < numStates; stateIdx++) {
+            cumulative += normalizedProbs[stateIdx];
+            if (rand <= cumulative) {
+              chosenState = stateIdx;
+              break;
+            }
+          }
+          nodeStates[index] = chosenState;
+        });
+      }
+
+      features[nodeId] = nodeStates;
+    }
+
+    setNodeFeatures(features);
+    setStepCount(0);
+    setMetrics(null);
+  };
+
+  // Randomize cultural features for all nodes (Basic mode)
   const randomizeFeatures = () => {
+    if (simulationMode === 'interpretable') {
+      randomizeInterpretableFeatures();
+      return;
+    }
+
     const features = {};
     for (let i = 0; i < gridSize * gridSize; i++) {
       features[i] = Array.from({ length: F }, () => Math.floor(Math.random() * q));
@@ -44,6 +150,30 @@ function App() {
     const features = nodeFeatures[nodeId];
     if (!features) return '#3b82f6';
 
+    // Interpretable mode: average RGB of chosen state colors
+    if (simulationMode === 'interpretable') {
+      const rgbValues = [];
+
+      features.forEach((stateIndex, featureIdx) => {
+        if (stateIndex !== null && interpretableFeatures[featureIdx]) {
+          const state = interpretableFeatures[featureIdx].states[stateIndex];
+          if (state && state.color) {
+            rgbValues.push(hexToRgb(state.color));
+          }
+        }
+      });
+
+      if (rgbValues.length === 0) return '#3b82f6';
+
+      // Average RGB components
+      const avgR = Math.floor(rgbValues.reduce((sum, rgb) => sum + rgb[0], 0) / rgbValues.length);
+      const avgG = Math.floor(rgbValues.reduce((sum, rgb) => sum + rgb[1], 0) / rgbValues.length);
+      const avgB = Math.floor(rgbValues.reduce((sum, rgb) => sum + rgb[2], 0) / rgbValues.length);
+
+      return `rgb(${avgR}, ${avgG}, ${avgB})`;
+    }
+
+    // Basic mode: existing logic
     let r, g, b;
 
     if (F === 1) {
@@ -83,11 +213,12 @@ function App() {
 
   // Check if two nodes can interact
   const canInteract = (features1, features2) => {
+    const numFeatures = simulationMode === 'interpretable' ? interpretableFeatures.length : F;
     let commonCount = 0;
-    for (let i = 0; i < F; i++) {
+    for (let i = 0; i < numFeatures; i++) {
       if (features1[i] === features2[i]) commonCount++;
     }
-    return commonCount > 0 && commonCount < F;
+    return commonCount > 0 && commonCount < numFeatures;
   };
 
   // Check if simulation has reached absorbing state
@@ -157,6 +288,8 @@ function App() {
     let totalDistance = 0;
     let neighborPairCount = 0;
 
+    const numFeatures = simulationMode === 'interpretable' ? interpretableFeatures.length : F;
+
     for (let nodeId = 0; nodeId < totalNodes; nodeId++) {
       const neighbors = getNeighbors(nodeId);
       const nodeFeats = features[nodeId];
@@ -165,12 +298,12 @@ function App() {
         if (neighborId > nodeId) { // Count each pair only once
           const neighborFeats = features[neighborId];
           let differences = 0;
-          for (let i = 0; i < F; i++) {
+          for (let i = 0; i < numFeatures; i++) {
             if (nodeFeats[i] !== neighborFeats[i]) {
               differences++;
             }
           }
-          totalDistance += differences / F; // Normalize to 0-1
+          totalDistance += differences / numFeatures; // Normalize to 0-1
           neighborPairCount++;
         }
       }
@@ -215,9 +348,11 @@ function App() {
       const node1Features = prevFeatures[randomNode];
       const node2Features = prevFeatures[randomNeighbor];
 
+      const numFeatures = simulationMode === 'interpretable' ? interpretableFeatures.length : F;
+
       const differences = [];
       let commonCount = 0;
-      for (let i = 0; i < F; i++) {
+      for (let i = 0; i < numFeatures; i++) {
         if (node1Features[i] === node2Features[i]) {
           commonCount++;
         } else {
@@ -225,11 +360,11 @@ function App() {
         }
       }
 
-      if (differences.length === 0 || differences.length === F) {
+      if (differences.length === 0 || differences.length === numFeatures) {
         return prevFeatures;
       }
 
-      const interactionProbability = commonCount / F;
+      const interactionProbability = commonCount / numFeatures;
       if (Math.random() > interactionProbability) {
         return prevFeatures;
       }
@@ -241,7 +376,32 @@ function App() {
 
       const newFeatures = { ...prevFeatures };
       newFeatures[receiver] = [...prevFeatures[receiver]];
-      newFeatures[receiver][selectedFeatureIndex] = prevFeatures[dominator][selectedFeatureIndex];
+
+      // Interpretable mode: handle ordered features with one-step transition
+      if (simulationMode === 'interpretable') {
+        const feature = interpretableFeatures[selectedFeatureIndex];
+
+        if (feature.hasOrder) {
+          // Ordered feature: move one step toward dominator
+          const dominatorState = prevFeatures[dominator][selectedFeatureIndex];
+          const receiverState = prevFeatures[receiver][selectedFeatureIndex];
+
+          if (dominatorState > receiverState) {
+            // Move up one step
+            newFeatures[receiver][selectedFeatureIndex] = receiverState + 1;
+          } else if (dominatorState < receiverState) {
+            // Move down one step
+            newFeatures[receiver][selectedFeatureIndex] = receiverState - 1;
+          }
+          // If equal, no change (shouldn't happen since they differ)
+        } else {
+          // Non-ordered feature: adopt completely
+          newFeatures[receiver][selectedFeatureIndex] = prevFeatures[dominator][selectedFeatureIndex];
+        }
+      } else {
+        // Basic mode: adopt completely
+        newFeatures[receiver][selectedFeatureIndex] = prevFeatures[dominator][selectedFeatureIndex];
+      }
 
       return newFeatures;
     });
