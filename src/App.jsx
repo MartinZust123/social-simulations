@@ -18,6 +18,9 @@ function App() {
   const [featureNames, setFeatureNames] = useState({});
   const [valueNames, setValueNames] = useState({});
   const [simulationMode, setSimulationMode] = useState('basic'); // 'basic' or 'interpretable'
+  const [interpretableFeatures, setInterpretableFeatures] = useState([
+    { name: '', states: [''] }
+  ]); // For interpretable mode
 
   // Randomize cultural features for all nodes
   const randomizeFeatures = () => {
@@ -325,6 +328,8 @@ function App() {
           setValueNames={setValueNames}
           simulationMode={simulationMode}
           setSimulationMode={setSimulationMode}
+          interpretableFeatures={interpretableFeatures}
+          setInterpretableFeatures={setInterpretableFeatures}
         />
       )}
 
