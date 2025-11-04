@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function SimulationGrid({ gridSize, gridConfig, nodeFeatures, getNodeColor, featureNames, valueNames }) {
+function SimulationGrid({ gridSize, gridConfig, nodeFeatures, getNodeColor, featureNames, valueNames, simulationMode, interpretableFeatures }) {
   const [hoveredNode, setHoveredNode] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
@@ -53,18 +53,45 @@ function SimulationGrid({ gridSize, gridConfig, nodeFeatures, getNodeColor, feat
         >
           <div className="tooltip-title">Person {hoveredNode}</div>
           <div className="tooltip-features">
-            {nodeFeatures[hoveredNode].map((value, featureIdx) => {
-              const featureName = featureNames[featureIdx] || `Feature ${featureIdx}`;
-              const valueName = valueNames[featureIdx]?.[value];
-              const displayValue = valueName ? `${value} (${valueName})` : value;
+            {simulationMode === 'interpretable' ? (
+              // Interpretable mode: Show feature names, state names, and colors
+              nodeFeatures[hoveredNode].map((stateIndex, featureIdx) => {
+                if (!interpretableFeatures[featureIdx]) return null;
 
-              return (
-                <div key={featureIdx} className="tooltip-feature">
-                  <span className="tooltip-feature-name">{featureName}:</span>
-                  <span className="tooltip-feature-value">{displayValue}</span>
-                </div>
-              );
-            })}
+                const feature = interpretableFeatures[featureIdx];
+                const state = feature.states[stateIndex];
+                const featureName = feature.name || `Feature ${featureIdx + 1}`;
+                const stateName = state?.name || `State ${stateIndex}`;
+                const stateColor = state?.color || '#3b82f6';
+
+                return (
+                  <div key={featureIdx} className="tooltip-feature">
+                    <span className="tooltip-feature-name">{featureName}:</span>
+                    <div className="tooltip-feature-value-with-color">
+                      <div
+                        className="tooltip-state-color"
+                        style={{ backgroundColor: stateColor }}
+                      ></div>
+                      <span className="tooltip-feature-value">{stateName}</span>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              // Basic mode: Show existing format
+              nodeFeatures[hoveredNode].map((value, featureIdx) => {
+                const featureName = featureNames[featureIdx] || `Feature ${featureIdx}`;
+                const valueName = valueNames[featureIdx]?.[value];
+                const displayValue = valueName ? `${value} (${valueName})` : value;
+
+                return (
+                  <div key={featureIdx} className="tooltip-feature">
+                    <span className="tooltip-feature-name">{featureName}:</span>
+                    <span className="tooltip-feature-value">{displayValue}</span>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       )}

@@ -3,22 +3,25 @@ import { useState, useEffect } from 'react';
 function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ, F, setF, featureNames, setFeatureNames, valueNames, setValueNames, simulationMode, interpretableFeatures, setInterpretableFeatures, featureCorrelations, setFeatureCorrelations }) {
   const [showNaming, setShowNaming] = useState(false);
 
-  // Calculate feature pairs dynamically when features change
+  // Calculate feature pairs dynamically when features change - only for ordered features
   useEffect(() => {
     if (simulationMode === 'interpretable' && interpretableFeatures.length >= 2) {
       const newCorrelations = {};
       for (let i = 0; i < interpretableFeatures.length; i++) {
         for (let j = i + 1; j < interpretableFeatures.length; j++) {
-          const key = `${i}-${j}`;
-          // Keep existing value or default to 0
-          newCorrelations[key] = featureCorrelations[key] ?? 0;
+          // Only create correlation if both features have order
+          if (interpretableFeatures[i].hasOrder && interpretableFeatures[j].hasOrder) {
+            const key = `${i}-${j}`;
+            // Keep existing value or default to 0
+            newCorrelations[key] = featureCorrelations[key] ?? 0;
+          }
         }
       }
       setFeatureCorrelations(newCorrelations);
     } else if (simulationMode === 'interpretable' && interpretableFeatures.length < 2) {
       setFeatureCorrelations({});
     }
-  }, [interpretableFeatures.length, simulationMode]);
+  }, [interpretableFeatures.length, simulationMode, interpretableFeatures.map(f => f.hasOrder).join(',')]);
 
   const updateCorrelation = (i, j, value) => {
     const key = `${i}-${j}`;
@@ -219,13 +222,19 @@ function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ
             + Add Feature
           </button>
 
-          {interpretableFeatures.length >= 2 && (
+          {interpretableFeatures.length >= 2 && Object.keys(featureCorrelations).length > 0 && (
             <div className="correlations-section">
               <h3 className="correlations-title">Feature Correlations</h3>
               {interpretableFeatures.map((feature1, i) =>
                 interpretableFeatures.slice(i + 1).map((feature2, j) => {
                   const actualJ = i + j + 1;
                   const key = `${i}-${actualJ}`;
+
+                  // Only show if both features have order
+                  if (!feature1.hasOrder || !feature2.hasOrder) {
+                    return null;
+                  }
+
                   const feature1Name = feature1.name || `Feature ${i + 1}`;
                   const feature2Name = feature2.name || `Feature ${actualJ + 1}`;
                   const correlationValue = featureCorrelations[key] ?? 0;
