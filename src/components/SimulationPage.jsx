@@ -27,7 +27,9 @@ function SimulationPage({
   simulationMode,
   setSimulationMode,
   interpretableFeatures,
-  setInterpretableFeatures
+  setInterpretableFeatures,
+  featureCorrelations,
+  setFeatureCorrelations
 }) {
   const [showParameters, setShowParameters] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -110,6 +112,8 @@ function SimulationPage({
             simulationMode={simulationMode}
             interpretableFeatures={interpretableFeatures}
             setInterpretableFeatures={setInterpretableFeatures}
+            featureCorrelations={featureCorrelations}
+            setFeatureCorrelations={setFeatureCorrelations}
           />
         )}
 

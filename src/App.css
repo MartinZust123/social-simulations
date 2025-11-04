@@ -543,6 +543,50 @@
   border-color: #93c5fd;
 }
 
+.correlations-section {
+  width: 100%;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.correlations-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 1.25rem 0;
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+
+.correlation-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.correlation-item:last-child {
+  margin-bottom: 0;
+}
+
+.correlation-label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #374151;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.correlation-value {
+  font-weight: 600;
+  color: #3b82f6;
+  font-size: 1rem;
+}
+
 .naming-section {
   width: 600px;
   margin-top: 1rem;

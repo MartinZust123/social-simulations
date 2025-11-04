@@ -21,6 +21,7 @@ function App() {
   const [interpretableFeatures, setInterpretableFeatures] = useState([
     { name: '', states: [{ name: '', color: '#3b82f6' }], hasOrder: false }
   ]); // For interpretable mode
+  const [featureCorrelations, setFeatureCorrelations] = useState({}); // For interpretable mode correlations
 
   // Randomize cultural features for all nodes
   const randomizeFeatures = () => {
@@ -330,6 +331,8 @@ function App() {
           setSimulationMode={setSimulationMode}
           interpretableFeatures={interpretableFeatures}
           setInterpretableFeatures={setInterpretableFeatures}
+          featureCorrelations={featureCorrelations}
+          setFeatureCorrelations={setFeatureCorrelations}
         />
       )}
 

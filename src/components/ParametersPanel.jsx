@@ -1,7 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ, F, setF, featureNames, setFeatureNames, valueNames, setValueNames, simulationMode, interpretableFeatures, setInterpretableFeatures }) {
+function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ, F, setF, featureNames, setFeatureNames, valueNames, setValueNames, simulationMode, interpretableFeatures, setInterpretableFeatures, featureCorrelations, setFeatureCorrelations }) {
   const [showNaming, setShowNaming] = useState(false);
+
+  // Calculate feature pairs dynamically when features change
+  useEffect(() => {
+    if (simulationMode === 'interpretable' && interpretableFeatures.length >= 2) {
+      const newCorrelations = {};
+      for (let i = 0; i < interpretableFeatures.length; i++) {
+        for (let j = i + 1; j < interpretableFeatures.length; j++) {
+          const key = `${i}-${j}`;
+          // Keep existing value or default to 0
+          newCorrelations[key] = featureCorrelations[key] ?? 0;
+        }
+      }
+      setFeatureCorrelations(newCorrelations);
+    } else if (simulationMode === 'interpretable' && interpretableFeatures.length < 2) {
+      setFeatureCorrelations({});
+    }
+  }, [interpretableFeatures.length, simulationMode]);
+
+  const updateCorrelation = (i, j, value) => {
+    const key = `${i}-${j}`;
+    setFeatureCorrelations(prev => ({
+      ...prev,
+      [key]: parseFloat(value)
+    }));
+  };
 
   const addFeature = () => {
     setInterpretableFeatures([...interpretableFeatures, { name: '', states: [{ name: '', color: '#3b82f6' }], hasOrder: false }]);
@@ -193,6 +218,38 @@ function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ
           <button className="add-feature-button" onClick={addFeature}>
             + Add Feature
           </button>
+
+          {interpretableFeatures.length >= 2 && (
+            <div className="correlations-section">
+              <h3 className="correlations-title">Feature Correlations</h3>
+              {interpretableFeatures.map((feature1, i) =>
+                interpretableFeatures.slice(i + 1).map((feature2, j) => {
+                  const actualJ = i + j + 1;
+                  const key = `${i}-${actualJ}`;
+                  const feature1Name = feature1.name || `Feature ${i + 1}`;
+                  const feature2Name = feature2.name || `Feature ${actualJ + 1}`;
+                  const correlationValue = featureCorrelations[key] ?? 0;
+
+                  return (
+                    <div key={key} className="correlation-item">
+                      <label className="correlation-label">
+                        Correlation - {feature1Name} and {feature2Name}: <span className="correlation-value">{correlationValue.toFixed(2)}</span>
+                      </label>
+                      <input
+                        type="range"
+                        min="-1"
+                        max="1"
+                        step="0.01"
+                        value={correlationValue}
+                        onChange={(e) => updateCorrelation(i, actualJ, e.target.value)}
+                        className="slider"
+                      />
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          )}
         </div>
       )}
 
