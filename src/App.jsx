@@ -13,6 +13,8 @@ function App() {
   const [q, setQ] = useState(6);
   const [F, setF] = useState(3);
   const intervalRef = useRef(null);
+  const [stepCount, setStepCount] = useState(0);
+  const [metrics, setMetrics] = useState(null);
 
   // Randomize cultural features for all nodes
   const randomizeFeatures = () => {
@@ -21,6 +23,8 @@ function App() {
       features[i] = Array.from({ length: F }, () => Math.floor(Math.random() * q));
     }
     setNodeFeatures(features);
+    setStepCount(0);
+    setMetrics(null);
   };
 
   // Randomize on initial render
@@ -98,6 +102,84 @@ function App() {
     return true;
   };
 
+  // Calculate metrics when simulation ends
+  const calculateMetrics = (features, currentSteps) => {
+    const totalNodes = gridSize * gridSize;
+
+    // 1. Count unique cultures
+    const cultureSet = new Set();
+    Object.values(features).forEach(feats => {
+      cultureSet.add(JSON.stringify(feats));
+    });
+    const uniqueCultures = cultureSet.size;
+
+    // 2. Find largest domain size
+    const visited = new Set();
+    let largestDomainSize = 0;
+
+    const bfs = (startNode) => {
+      const queue = [startNode];
+      visited.add(startNode);
+      let domainSize = 1;
+      const startFeatures = JSON.stringify(features[startNode]);
+
+      while (queue.length > 0) {
+        const node = queue.shift();
+        const neighbors = getNeighbors(node);
+
+        for (const neighbor of neighbors) {
+          if (!visited.has(neighbor) && JSON.stringify(features[neighbor]) === startFeatures) {
+            visited.add(neighbor);
+            queue.push(neighbor);
+            domainSize++;
+          }
+        }
+      }
+
+      return domainSize;
+    };
+
+    for (let nodeId = 0; nodeId < totalNodes; nodeId++) {
+      if (!visited.has(nodeId)) {
+        const domainSize = bfs(nodeId);
+        largestDomainSize = Math.max(largestDomainSize, domainSize);
+      }
+    }
+
+    // 3. Calculate average cultural distance
+    let totalDistance = 0;
+    let neighborPairCount = 0;
+
+    for (let nodeId = 0; nodeId < totalNodes; nodeId++) {
+      const neighbors = getNeighbors(nodeId);
+      const nodeFeats = features[nodeId];
+
+      for (const neighborId of neighbors) {
+        if (neighborId > nodeId) { // Count each pair only once
+          const neighborFeats = features[neighborId];
+          let differences = 0;
+          for (let i = 0; i < F; i++) {
+            if (nodeFeats[i] !== neighborFeats[i]) {
+              differences++;
+            }
+          }
+          totalDistance += differences / F; // Normalize to 0-1
+          neighborPairCount++;
+        }
+      }
+    }
+
+    const avgCulturalDistance = neighborPairCount > 0 ? totalDistance / neighborPairCount : 0;
+
+    return {
+      totalSteps: currentSteps,
+      uniqueCultures,
+      largestDomainSize,
+      largestDomainPercentage: ((largestDomainSize / totalNodes) * 100).toFixed(1),
+      avgCulturalDistance: avgCulturalDistance.toFixed(3)
+    };
+  };
+
   // Perform one simulation step
   const simulationStep = () => {
     setNodeFeatures((prevFeatures) => {
@@ -105,8 +187,16 @@ function App() {
 
       if (checkAbsorbingState(prevFeatures)) {
         setIsSimulating(false);
+        // Use callback to get the latest stepCount
+        setStepCount(currentSteps => {
+          const finalMetrics = calculateMetrics(prevFeatures, currentSteps);
+          setMetrics(finalMetrics);
+          return currentSteps;
+        });
         return prevFeatures;
       }
+
+      setStepCount(prev => prev + 1);
 
       const totalNodes = gridSize * gridSize;
       const randomNode = Math.floor(Math.random() * totalNodes);
@@ -225,6 +315,7 @@ function App() {
           getNodeColor={getNodeColor}
           gridConfig={gridConfig}
           randomizeFeatures={randomizeFeatures}
+          metrics={metrics}
         />
       )}
 

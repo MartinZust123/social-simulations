@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import ParametersPanel from './ParametersPanel';
 import SimulationGrid from './SimulationGrid';
+import MetricsDisplay from './MetricsDisplay';
 
 function SimulationPage({
   gridSize,
@@ -17,7 +18,8 @@ function SimulationPage({
   setIsSimulating,
   getNodeColor,
   gridConfig,
-  randomizeFeatures
+  randomizeFeatures,
+  metrics
 }) {
   const [showParameters, setShowParameters] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -96,6 +98,11 @@ function SimulationPage({
         gridConfig={gridConfig}
         nodeFeatures={nodeFeatures}
         getNodeColor={getNodeColor}
+      />
+
+      <MetricsDisplay
+        metrics={metrics}
+        simulationParams={{ gridSize, F, q, stepTime }}
       />
     </main>
   );
