@@ -23,7 +23,9 @@ function SimulationPage({
   featureNames,
   setFeatureNames,
   valueNames,
-  setValueNames
+  setValueNames,
+  simulationMode,
+  setSimulationMode
 }) {
   const [showParameters, setShowParameters] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -53,6 +55,21 @@ function SimulationPage({
   return (
     <main className="main-content">
       <div className="controls">
+        <div className="mode-selector">
+          <button
+            className={`mode-button ${simulationMode === 'basic' ? 'active' : ''}`}
+            onClick={() => setSimulationMode('basic')}
+          >
+            Basic
+          </button>
+          <button
+            className={`mode-button ${simulationMode === 'interpretable' ? 'active' : ''}`}
+            onClick={() => setSimulationMode('interpretable')}
+          >
+            Interpretable
+          </button>
+        </div>
+
         <div className="parameters-toggle-wrapper">
           {showTooltip && (
             <div className="parameter-tooltip">
@@ -91,29 +108,54 @@ function SimulationPage({
           />
         )}
 
-        <div className="button-group">
-          <button className="randomize-button" onClick={randomizeFeatures}>
-            Randomize
-          </button>
-          <button className="simulate-button" onClick={toggleSimulation}>
-            {isSimulating ? 'Stop' : 'Simulate'}
-          </button>
-        </div>
+        {simulationMode === 'basic' && (
+          <div className="button-group">
+            <button className="randomize-button" onClick={randomizeFeatures}>
+              Randomize
+            </button>
+            <button className="simulate-button" onClick={toggleSimulation}>
+              {isSimulating ? 'Stop' : 'Simulate'}
+            </button>
+          </div>
+        )}
+
+        {simulationMode === 'interpretable' && (
+          <div className="button-group">
+            <button className="randomize-button" onClick={randomizeFeatures}>
+              Randomize
+            </button>
+          </div>
+        )}
       </div>
 
-      <SimulationGrid
-        gridSize={gridSize}
-        gridConfig={gridConfig}
-        nodeFeatures={nodeFeatures}
-        getNodeColor={getNodeColor}
-        featureNames={featureNames}
-        valueNames={valueNames}
-      />
+      {simulationMode === 'basic' && (
+        <>
+          <SimulationGrid
+            gridSize={gridSize}
+            gridConfig={gridConfig}
+            nodeFeatures={nodeFeatures}
+            getNodeColor={getNodeColor}
+            featureNames={featureNames}
+            valueNames={valueNames}
+          />
 
-      <MetricsDisplay
-        metrics={metrics}
-        simulationParams={{ gridSize, F, q, stepTime }}
-      />
+          <MetricsDisplay
+            metrics={metrics}
+            simulationParams={{ gridSize, F, q, stepTime }}
+          />
+        </>
+      )}
+
+      {simulationMode === 'interpretable' && (
+        <SimulationGrid
+          gridSize={gridSize}
+          gridConfig={gridConfig}
+          nodeFeatures={nodeFeatures}
+          getNodeColor={getNodeColor}
+          featureNames={featureNames}
+          valueNames={valueNames}
+        />
+      )}
     </main>
   );
 }

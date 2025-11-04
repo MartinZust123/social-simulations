@@ -103,15 +103,54 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  width: 100%;
-  max-width: 600px;
+  gap: 0;
+  width: 600px;
+  overflow: hidden;
+}
+
+.mode-selector {
+  width: 80%;
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background: #f9fafb;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  margin: 0 auto 1rem auto;
+}
+
+.mode-button {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #6b7280;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: -0.005em;
+}
+
+.mode-button:hover {
+  color: #374151;
+  background: #ffffff;
+}
+
+.mode-button.active {
+  color: #1f2937;
+  background: #e0e7ff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .button-group {
   display: flex;
   gap: 1rem;
   align-items: center;
+  justify-content: center;
+  width: 80%;
+  margin: 0 auto 1rem auto;
 }
 
 .control-label {
@@ -126,7 +165,7 @@
 }
 
 .slider {
-  width: 100%;
+  width: 80%;
   height: 8px;
   border-radius: 5px;
   background: #e5e7eb;
@@ -207,8 +246,10 @@
 }
 
 .parameters-toggle-wrapper {
-  width: 100%;
+  width: 80%;
   position: relative;
+  margin: 0 auto 1rem auto;
+  min-height: 40px;
 }
 
 .parameters-toggle {
@@ -273,19 +314,24 @@
 }
 
 .parameters-panel {
-  width: 100%;
+  width: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  padding-top: 1rem;
+  padding-top: 0;
+  padding-bottom: 1rem;
+  margin-top: 1rem;
+  box-sizing: border-box;
 }
 
 .naming-section {
-  width: 100%;
+  width: 600px;
   margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e5e7eb;
+  margin-bottom: 2rem;
+  padding-top: 0;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .naming-toggle-button {
@@ -317,10 +363,14 @@
 
 .naming-content {
   margin-top: 1rem;
-  padding: 1rem;
+  padding: 0.75rem;
   background: #f9fafb;
   border-radius: 8px;
   border: 1px solid #e5e7eb;
+  max-width: 100%;
+  width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
 }
 
 .naming-description {
@@ -333,10 +383,12 @@
 
 .feature-naming-group {
   margin-bottom: 1.5rem;
-  padding: 1rem;
+  padding: 0.75rem;
   background: #ffffff;
   border-radius: 8px;
   border: 1px solid #e5e7eb;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .feature-naming-group:last-child {
@@ -362,6 +414,7 @@
 
 .feature-name-input {
   width: 100%;
+  max-width: 100%;
   padding: 0.625rem 0.875rem;
   font-size: 0.9375rem;
   color: #1a1a1a;
@@ -369,6 +422,7 @@
   border: 1px solid #d1d5db;
   border-radius: 6px;
   transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .feature-name-input:focus {
@@ -383,14 +437,15 @@
 
 .value-naming-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
 }
 
 .value-naming-item {
   display: flex;
   flex-direction: column;
   gap: 0.375rem;
+  min-width: 0;
 }
 
 .value-index {
@@ -409,13 +464,15 @@
 
 .value-name-input {
   width: 100%;
-  padding: 0.5rem 0.625rem;
-  font-size: 0.8125rem;
+  min-width: 0;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.75rem;
   color: #1a1a1a;
   background: #ffffff;
   border: 1px solid #d1d5db;
   border-radius: 4px;
   transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .value-name-input:focus {
@@ -606,6 +663,20 @@
     max-width: 400px;
     max-height: 400px;
     padding: 1.5rem;
+  }
+
+  .controls {
+    width: 100%;
+  }
+
+  .parameters-panel {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .naming-section {
+    width: 100%;
+    max-width: 100%;
   }
 
   .value-naming-grid {
