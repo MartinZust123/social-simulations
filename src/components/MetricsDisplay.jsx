@@ -1,9 +1,23 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { detectTemplate } from '../utils/templates';
 
 function MetricsDisplay({ metrics, simulationParams, interpretableFeatures, featureCorrelations, simulationMode }) {
+  const savedMetricsRef = useRef(null);
+
   useEffect(() => {
     if (!metrics || !simulationParams) return;
+
+    // Create a unique key for this simulation result
+    const metricsKey = JSON.stringify({
+      totalSteps: metrics.totalSteps,
+      uniqueCultures: metrics.uniqueCultures,
+      largestDomainSize: metrics.largestDomainSize,
+      avgCulturalDistance: metrics.avgCulturalDistance,
+      mode: simulationMode
+    });
+
+    // Skip if we've already saved this exact result
+    if (savedMetricsRef.current === metricsKey) return;
 
     // Automatically save to database when metrics are available
     const saveToDatabase = async () => {
@@ -54,6 +68,9 @@ function MetricsDisplay({ metrics, simulationParams, interpretableFeatures, feat
           },
           body: JSON.stringify(bodyData),
         });
+
+        // Mark this result as saved
+        savedMetricsRef.current = metricsKey;
       } catch (error) {
         console.error('Error saving to database:', error);
       }
