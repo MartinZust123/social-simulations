@@ -329,9 +329,22 @@ function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ
         />
         {simulationMode === 'basic' && (
           <>
-            <label className="control-label">
-              q (Possible States): <span className="grid-size-value">{q}</span>
-            </label>
+            <div className="parameter-with-info">
+              <div className="info-button-wrapper">
+                <button
+                  className="info-button"
+                  type="button"
+                >
+                  i
+                </button>
+                <div className="info-tooltip">
+                  Number of possible states (traits) each cultural feature can have. Higher values create more diversity.
+                </div>
+              </div>
+              <label className="control-label">
+                q (Possible States): <span className="grid-size-value">{q}</span>
+              </label>
+            </div>
             <input
               type="range"
               min="2"
@@ -340,9 +353,22 @@ function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ
               onChange={(e) => setQ(Number(e.target.value))}
               className="slider"
             />
-            <label className="control-label">
-              F (Cultural Features): <span className="grid-size-value">{F}</span>
-            </label>
+            <div className="parameter-with-info">
+              <div className="info-button-wrapper">
+                <button
+                  className="info-button"
+                  type="button"
+                >
+                  i
+                </button>
+                <div className="info-tooltip">
+                  Number of independent cultural features (dimensions) each person has. Examples: language, religion, customs.
+                </div>
+              </div>
+              <label className="control-label">
+                F (Cultural Features): <span className="grid-size-value">{F}</span>
+              </label>
+            </div>
             <input
               type="range"
               min="1"
@@ -397,6 +423,21 @@ function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ
                 Tradition-Innovation
               </button>
             </div>
+          </div>
+
+          <div className="features-info-section">
+            <div className="info-button-wrapper">
+              <button
+                className="info-button"
+                type="button"
+              >
+                i
+              </button>
+              <div className="info-tooltip">
+                <strong>Feature:</strong> A dimension that defines characteristics (e.g., Religion, Language). <strong>State:</strong> A specific value a feature can take (e.g., for Religion: Christian, Muslim, Hindu).
+              </div>
+            </div>
+            <span className="features-info-label">Define Features & States</span>
           </div>
 
           {interpretableFeatures.map((feature, featureIdx) => (
@@ -475,7 +516,15 @@ function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ
 
           {interpretableFeatures.length >= 2 && Object.keys(featureCorrelations).length > 0 && (
             <div className="correlations-section">
-              <h3 className="correlations-title">Feature Correlations</h3>
+              <div className="correlations-title-wrapper">
+                <h3 className="correlations-title">Feature Correlations</h3>
+                <div className="info-button-wrapper">
+                  <button className="info-button" type="button">i</button>
+                  <div className="info-tooltip">
+                    Correlations define how features influence each other during randomization. Values range from -1 (negative correlation) to +1 (positive correlation). 0 means no correlation.
+                  </div>
+                </div>
+              </div>
               {interpretableFeatures.map((feature1, i) =>
                 interpretableFeatures.slice(i + 1).map((feature2, j) => {
                   const actualJ = i + j + 1;

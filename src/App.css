@@ -159,6 +159,84 @@
   color: #374151;
 }
 
+.parameter-with-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 80%;
+  margin: 0 auto;
+  position: relative;
+}
+
+.info-button-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.info-button {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #9ca3af;
+  color: white;
+  border: none;
+  font-size: 0.625rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  font-style: italic;
+  padding: 0;
+}
+
+.info-button:hover {
+  background: #6b7280;
+}
+
+.info-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+  width: 250px;
+  padding: 0.625rem 0.875rem;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  color: #374151;
+  line-height: 1.4;
+  text-align: left;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.info-tooltip::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border-right: 1px solid #d1d5db;
+  border-bottom: 1px solid #d1d5db;
+}
+
+.info-button-wrapper:hover .info-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
 .grid-size-value {
   font-weight: 600;
   color: #3b82f6;
@@ -383,10 +461,61 @@
   padding: 1rem;
 }
 
+.features-info-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.features-info-section .info-tooltip {
+  left: calc(100% + 8px);
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.features-info-section .info-tooltip::before {
+  left: -6px;
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  border-right: none;
+  border-bottom: 1px solid #d1d5db;
+  border-left: 1px solid #d1d5db;
+}
+
+.features-info-label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #374151;
+}
+
 .interpretable-feature-header {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 0.75rem;
+}
+
+.interpretable-feature-header .info-tooltip {
+  left: calc(100% + 8px);
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.interpretable-feature-header .info-tooltip::before {
+  left: -6px;
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  border-right: none;
+  border-bottom: 1px solid #d1d5db;
+  border-left: 1px solid #d1d5db;
 }
 
 .feature-order-toggle {
@@ -470,6 +599,23 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
+}
+
+.interpretable-state-item .info-tooltip {
+  left: calc(100% + 8px);
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.interpretable-state-item .info-tooltip::before {
+  left: -6px;
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  border-right: none;
+  border-bottom: 1px solid #d1d5db;
+  border-left: 1px solid #d1d5db;
 }
 
 .state-color-picker {
@@ -594,13 +740,37 @@
   border-radius: 8px;
 }
 
+.correlations-title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
 .correlations-title {
   font-size: 1.125rem;
   font-weight: 600;
   color: #1a1a1a;
-  margin: 0 0 1.25rem 0;
-  text-align: center;
+  margin: 0;
   letter-spacing: -0.01em;
+}
+
+.correlations-title-wrapper .info-tooltip {
+  left: 50%;
+  bottom: calc(100% + 8px);
+  top: auto;
+  transform: translateX(-50%);
+}
+
+.correlations-title-wrapper .info-tooltip::before {
+  left: 50%;
+  bottom: -6px;
+  top: auto;
+  transform: translateX(-50%) rotate(45deg);
+  border-right: 1px solid #d1d5db;
+  border-bottom: 1px solid #d1d5db;
+  border-left: none;
 }
 
 .correlation-item {
