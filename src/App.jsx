@@ -23,6 +23,11 @@ function App() {
   ]); // For interpretable mode
   const [featureCorrelations, setFeatureCorrelations] = useState({}); // For interpretable mode correlations
 
+  // Clear metrics when switching simulation modes to prevent duplicate saves
+  useEffect(() => {
+    setMetrics(null);
+  }, [simulationMode]);
+
   // Helper: Convert state index to r value (0 to 1)
   const indexToR = (index, totalStates) => {
     if (totalStates === 1) return 0;
