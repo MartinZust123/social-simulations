@@ -36,6 +36,11 @@ function SimulationPage({
   const [isGridInitialized, setIsGridInitialized] = useState(false);
   const tooltipTimeoutRef = useRef(null);
 
+  // Reset grid initialization when switching modes or when metrics are generated (simulation ended)
+  useEffect(() => {
+    setIsGridInitialized(false);
+  }, [simulationMode, metrics]);
+
   const handleParametersToggle = () => {
     if (isSimulating) {
       setShowTooltip(true);
@@ -59,9 +64,7 @@ function SimulationPage({
 
   const handleRandomize = () => {
     randomizeFeatures();
-    if (simulationMode === 'interpretable') {
-      setIsGridInitialized(true);
-    }
+    setIsGridInitialized(true);
   };
 
   return (
@@ -130,9 +133,11 @@ function SimulationPage({
             <button className="randomize-button" onClick={handleRandomize}>
               Randomize
             </button>
-            <button className="simulate-button" onClick={toggleSimulation}>
-              {isSimulating ? 'Stop' : 'Simulate'}
-            </button>
+            {isGridInitialized && (
+              <button className="simulate-button" onClick={toggleSimulation}>
+                {isSimulating ? 'Stop' : 'Simulate'}
+              </button>
+            )}
           </div>
         )}
 
