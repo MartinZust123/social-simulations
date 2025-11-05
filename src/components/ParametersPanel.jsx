@@ -1,5 +1,122 @@
 import { useState, useEffect } from 'react';
 
+// Template definitions
+const TEMPLATES = {
+  'political-cultural': {
+    name: 'Political-Cultural',
+    features: [
+      {
+        name: 'Political Ideology',
+        hasOrder: true,
+        states: [
+          { name: 'Far Left', color: '#e63946' },
+          { name: 'Center Left', color: '#f4a261' },
+          { name: 'Center', color: '#e9c46a' },
+          { name: 'Center Right', color: '#8ecae6' },
+          { name: 'Far Right', color: '#023047' }
+        ]
+      },
+      {
+        name: 'Religious Practice',
+        hasOrder: true,
+        states: [
+          { name: 'Secular', color: '#2a9d8f' },
+          { name: 'Occasionally Religious', color: '#8ab17d' },
+          { name: 'Moderately Religious', color: '#f4a261' },
+          { name: 'Very Religious', color: '#e76f51' }
+        ]
+      },
+      {
+        name: 'Language Family',
+        hasOrder: false,
+        states: [
+          { name: 'Romance', color: '#d62828' },
+          { name: 'Germanic', color: '#003049' },
+          { name: 'Slavic', color: '#fcbf49' },
+          { name: 'Asian', color: '#06a77d' }
+        ]
+      }
+    ],
+    correlations: {
+      '0-1': -0.40
+    }
+  },
+  'social-values': {
+    name: 'Social Values',
+    features: [
+      {
+        name: 'Environmental Concern',
+        hasOrder: true,
+        states: [
+          { name: 'Low Priority', color: '#8d99ae' },
+          { name: 'Some Concern', color: '#edf2f4' },
+          { name: 'High Priority', color: '#90e0ef' },
+          { name: 'Climate Activist', color: '#06d6a0' }
+        ]
+      },
+      {
+        name: 'Economic Policy',
+        hasOrder: true,
+        states: [
+          { name: 'Free Market', color: '#f72585' },
+          { name: 'Mixed Economy', color: '#7209b7' },
+          { name: 'Planned Economy', color: '#3a0ca3' }
+        ]
+      },
+      {
+        name: 'Cultural Tradition',
+        hasOrder: false,
+        states: [
+          { name: 'Western', color: '#4361ee' },
+          { name: 'Eastern', color: '#f72585' },
+          { name: 'African', color: '#ffbe0b' },
+          { name: 'Indigenous', color: '#06a77d' }
+        ]
+      }
+    ],
+    correlations: {
+      '0-1': 0.35
+    }
+  },
+  'technology-adoption': {
+    name: 'Technology Adoption',
+    features: [
+      {
+        name: 'Tech Adoption Rate',
+        hasOrder: true,
+        states: [
+          { name: 'Late Majority', color: '#8d99ae' },
+          { name: 'Early Majority', color: '#48cae4' },
+          { name: 'Early Adopter', color: '#0096c7' },
+          { name: 'Innovator', color: '#023e8a' }
+        ]
+      },
+      {
+        name: 'Privacy Awareness',
+        hasOrder: true,
+        states: [
+          { name: 'Unaware', color: '#f4f1de' },
+          { name: 'Somewhat Aware', color: '#e07a5f' },
+          { name: 'Privacy Conscious', color: '#81b29a' },
+          { name: 'Privacy Advocate', color: '#3d405b' }
+        ]
+      },
+      {
+        name: 'Platform Preference',
+        hasOrder: false,
+        states: [
+          { name: 'Open Source', color: '#06a77d' },
+          { name: 'Proprietary', color: '#d62828' },
+          { name: 'Hybrid', color: '#f77f00' }
+        ]
+      }
+    ],
+    correlations: {
+      '0-1': 0.50
+    }
+  }
+};
+
 function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ, F, setF, featureNames, setFeatureNames, valueNames, setValueNames, simulationMode, interpretableFeatures, setInterpretableFeatures, featureCorrelations, setFeatureCorrelations }) {
   const [showNaming, setShowNaming] = useState(false);
 
@@ -75,6 +192,14 @@ function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ
     setInterpretableFeatures(updated);
   };
 
+  const loadTemplate = (templateKey) => {
+    const template = TEMPLATES[templateKey];
+    if (template) {
+      setInterpretableFeatures(template.features);
+      setFeatureCorrelations(template.correlations);
+    }
+  };
+
   const handleFeatureNameChange = (featureIndex, name) => {
     setFeatureNames(prev => ({
       ...prev,
@@ -148,6 +273,30 @@ function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ
 
       {simulationMode === 'interpretable' && (
         <div className="interpretable-features-section">
+          <div className="templates-section">
+            <h3 className="templates-title">Load Template</h3>
+            <div className="template-buttons">
+              <button
+                className="template-button"
+                onClick={() => loadTemplate('political-cultural')}
+              >
+                Political-Cultural
+              </button>
+              <button
+                className="template-button"
+                onClick={() => loadTemplate('social-values')}
+              >
+                Social Values
+              </button>
+              <button
+                className="template-button"
+                onClick={() => loadTemplate('technology-adoption')}
+              >
+                Technology Adoption
+              </button>
+            </div>
+          </div>
+
           {interpretableFeatures.map((feature, featureIdx) => (
             <div key={featureIdx} className="interpretable-feature-card">
               <div className="interpretable-feature-header">
