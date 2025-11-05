@@ -114,6 +114,90 @@ const TEMPLATES = {
     correlations: {
       '0-1': 0.50
     }
+  },
+  'urban-rural': {
+    name: 'Urban-Rural Divide',
+    features: [
+      {
+        name: 'Population Density',
+        hasOrder: true,
+        states: [
+          { name: 'Rural', color: '#8b4513' },
+          { name: 'Suburban', color: '#d2691e' },
+          { name: 'Urban', color: '#696969' },
+          { name: 'Metropolitan', color: '#2f4f4f' }
+        ]
+      },
+      {
+        name: 'Digital Infrastructure',
+        hasOrder: true,
+        states: [
+          { name: 'Limited', color: '#1a1a1a' },
+          { name: 'Basic', color: '#4a4a4a' },
+          { name: 'Good', color: '#808080' },
+          { name: 'Advanced', color: '#c0c0c0' }
+        ]
+      }
+    ],
+    correlations: {
+      '0-1': 0.65
+    }
+  },
+  'education-income': {
+    name: 'Education-Income',
+    features: [
+      {
+        name: 'Education Level',
+        hasOrder: true,
+        states: [
+          { name: 'No Degree', color: '#1c1c1c' },
+          { name: 'High School', color: '#4d4d4d' },
+          { name: "Bachelor's", color: '#808080' },
+          { name: 'Advanced', color: '#b3b3b3' }
+        ]
+      },
+      {
+        name: 'Income Level',
+        hasOrder: true,
+        states: [
+          { name: 'Low', color: '#6a994e' },
+          { name: 'Lower-Middle', color: '#a7c957' },
+          { name: 'Upper-Middle', color: '#f2e8cf' },
+          { name: 'High', color: '#bc6c25' }
+        ]
+      }
+    ],
+    correlations: {
+      '0-1': 0.70
+    }
+  },
+  'tradition-innovation': {
+    name: 'Tradition-Innovation',
+    features: [
+      {
+        name: 'Cultural Openness',
+        hasOrder: true,
+        states: [
+          { name: 'Traditional', color: '#0a0a0a' },
+          { name: 'Conservative', color: '#404040' },
+          { name: 'Moderate', color: '#808080' },
+          { name: 'Progressive', color: '#d3d3d3' }
+        ]
+      },
+      {
+        name: 'Innovation Acceptance',
+        hasOrder: true,
+        states: [
+          { name: 'Resistant', color: '#8b0000' },
+          { name: 'Cautious', color: '#dc143c' },
+          { name: 'Open', color: '#ff6347' },
+          { name: 'Enthusiastic', color: '#ffa07a' }
+        ]
+      }
+    ],
+    correlations: {
+      '0-1': 0.75
+    }
   }
 };
 
@@ -293,6 +377,24 @@ function ParametersPanel({ gridSize, setGridSize, stepTime, setStepTime, q, setQ
                 onClick={() => loadTemplate('technology-adoption')}
               >
                 Technology Adoption
+              </button>
+              <button
+                className="template-button"
+                onClick={() => loadTemplate('urban-rural')}
+              >
+                Urban-Rural Divide
+              </button>
+              <button
+                className="template-button"
+                onClick={() => loadTemplate('education-income')}
+              >
+                Education-Income
+              </button>
+              <button
+                className="template-button"
+                onClick={() => loadTemplate('tradition-innovation')}
+              >
+                Tradition-Innovation
               </button>
             </div>
           </div>
