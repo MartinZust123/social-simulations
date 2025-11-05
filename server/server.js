@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { saveSimulation } from './db.js';
+import { saveSimulation, saveInterpretableSimulation } from './db.js';
 
 dotenv.config();
 
@@ -17,7 +17,7 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
-// Save simulation endpoint
+// Save simulation endpoint (Basic mode)
 app.post('/api/simulations', async (req, res) => {
   try {
     const {
@@ -57,6 +57,54 @@ app.post('/api/simulations', async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to save simulation',
+      error: error.message
+    });
+  }
+});
+
+// Save interpretable simulation endpoint
+app.post('/api/interpretable-simulations', async (req, res) => {
+  try {
+    const {
+      gridSize,
+      stepTime,
+      totalSteps,
+      uniqueCultures,
+      largestDomainSize,
+      avgCulturalDistance,
+      features,
+      correlations,
+      templateName
+    } = req.body;
+
+    // Validate required fields
+    if (!gridSize || stepTime === undefined || !totalSteps ||
+        !uniqueCultures || !largestDomainSize || avgCulturalDistance === undefined ||
+        !features || !correlations) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields'
+      });
+    }
+
+    const result = await saveInterpretableSimulation({
+      gridSize,
+      stepTime,
+      totalSteps,
+      uniqueCultures,
+      largestDomainSize,
+      avgCulturalDistance,
+      features,
+      correlations,
+      templateName
+    });
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error saving interpretable simulation:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to save interpretable simulation',
       error: error.message
     });
   }

@@ -140,7 +140,7 @@ const TEMPLATES = {
       }
     ],
     correlations: {
-      '0-1': 0.65
+      '0-1': 0.4
     }
   },
   'education-income': {
@@ -168,7 +168,7 @@ const TEMPLATES = {
       }
     ],
     correlations: {
-      '0-1': 0.70
+      '0-1': 0.4
     }
   },
   'tradition-innovation': {
@@ -196,7 +196,7 @@ const TEMPLATES = {
       }
     ],
     correlations: {
-      '0-1': 0.75
+      '0-1': 0.55
     }
   }
 };

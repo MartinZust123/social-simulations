@@ -1,23 +1,41 @@
 import { useEffect } from 'react';
+import { detectTemplate } from '../utils/templates';
 
-function MetricsDisplay({ metrics, simulationParams }) {
+function MetricsDisplay({ metrics, simulationParams, interpretableFeatures, featureCorrelations, simulationMode }) {
   useEffect(() => {
     if (!metrics || !simulationParams) return;
 
     // Automatically save to database when metrics are available
     const saveToDatabase = async () => {
       try {
-        // Use relative URL - works for both local dev and production
-        const apiUrl = import.meta.env.DEV
-          ? 'http://localhost:3001/api/simulations'
-          : '/api/simulations';
+        // Determine if this is interpretable mode
+        const isInterpretable = simulationMode === 'interpretable';
 
-        await fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+        // Use appropriate endpoint
+        const apiUrl = import.meta.env.DEV
+          ? `http://localhost:3001/api/${isInterpretable ? 'interpretable-simulations' : 'simulations'}`
+          : `/api/${isInterpretable ? 'interpretable-simulations' : 'simulations'}`;
+
+        let bodyData;
+
+        if (isInterpretable) {
+          // Detect if configuration matches a template exactly
+          const templateName = detectTemplate(interpretableFeatures, featureCorrelations);
+
+          bodyData = {
+            gridSize: simulationParams.gridSize,
+            stepTime: simulationParams.stepTime,
+            totalSteps: metrics.totalSteps,
+            uniqueCultures: metrics.uniqueCultures,
+            largestDomainSize: metrics.largestDomainSize,
+            avgCulturalDistance: metrics.avgCulturalDistance,
+            features: interpretableFeatures,
+            correlations: featureCorrelations,
+            templateName: templateName
+          };
+        } else {
+          // Basic mode
+          bodyData = {
             gridSize: simulationParams.gridSize,
             F: simulationParams.F,
             q: simulationParams.q,
@@ -26,7 +44,15 @@ function MetricsDisplay({ metrics, simulationParams }) {
             uniqueCultures: metrics.uniqueCultures,
             largestDomainSize: metrics.largestDomainSize,
             avgCulturalDistance: metrics.avgCulturalDistance
-          }),
+          };
+        }
+
+        await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(bodyData),
         });
       } catch (error) {
         console.error('Error saving to database:', error);
@@ -34,7 +60,7 @@ function MetricsDisplay({ metrics, simulationParams }) {
     };
 
     saveToDatabase();
-  }, [metrics, simulationParams]);
+  }, [metrics, simulationParams, interpretableFeatures, featureCorrelations, simulationMode]);
 
   if (!metrics) return null;
 

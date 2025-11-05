@@ -68,4 +68,38 @@ export async function saveSimulation(data) {
   }
 }
 
+export async function saveInterpretableSimulation(data) {
+  try {
+    const pool = await getConnection();
+    const result = await pool.request()
+      .input('grid_size', sql.Int, data.gridSize)
+      .input('step_time', sql.Float, data.stepTime)
+      .input('total_steps', sql.Int, data.totalSteps)
+      .input('unique_cultures', sql.Int, data.uniqueCultures)
+      .input('largest_domain_size', sql.Int, data.largestDomainSize)
+      .input('avg_cultural_distance', sql.Float, parseFloat(data.avgCulturalDistance))
+      .input('features', sql.NVarChar(sql.MAX), JSON.stringify(data.features))
+      .input('correlations', sql.NVarChar(sql.MAX), JSON.stringify(data.correlations))
+      .input('template_name', sql.VarChar(100), data.templateName || null)
+      .query(`
+        INSERT INTO interpretable_simulations (
+          grid_size, step_time, total_steps, unique_cultures,
+          largest_domain_size, avg_cultural_distance,
+          features, correlations, template_name
+        )
+        VALUES (
+          @grid_size, @step_time, @total_steps, @unique_cultures,
+          @largest_domain_size, @avg_cultural_distance,
+          @features, @correlations, @template_name
+        );
+        SELECT SCOPE_IDENTITY() AS id;
+      `);
+
+    return { success: true, id: result.recordset[0].id };
+  } catch (err) {
+    console.error('Error saving interpretable simulation:', err);
+    throw err;
+  }
+}
+
 export { sql };

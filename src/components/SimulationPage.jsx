@@ -166,6 +166,9 @@ function SimulationPage({
           <MetricsDisplay
             metrics={metrics}
             simulationParams={{ gridSize, F, q, stepTime }}
+            simulationMode={simulationMode}
+            interpretableFeatures={interpretableFeatures}
+            featureCorrelations={featureCorrelations}
           />
         </>
       )}
@@ -186,6 +189,9 @@ function SimulationPage({
           <MetricsDisplay
             metrics={metrics}
             simulationParams={{ gridSize, F: interpretableFeatures.length, q: Math.max(...interpretableFeatures.map(f => f.states.length)), stepTime }}
+            simulationMode={simulationMode}
+            interpretableFeatures={interpretableFeatures}
+            featureCorrelations={featureCorrelations}
           />
         </>
       )}
