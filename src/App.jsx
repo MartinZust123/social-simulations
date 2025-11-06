@@ -1,11 +1,11 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
 import Navbar from './components/Navbar'
 import SimulationPage from './components/SimulationPage'
 import MathPage from './components/MathPage'
 
 function App() {
-  const [activeTab, setActiveTab] = useState('simulate');
   const [gridSize, setGridSize] = useState(10);
   const [nodeFeatures, setNodeFeatures] = useState({});
   const [isSimulating, setIsSimulating] = useState(false);
@@ -463,45 +463,48 @@ function App() {
 
   return (
     <div className="app">
-      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Navbar />
 
       <header className="header">
         <h1 className="title">Social Simulations Made Simple</h1>
         <p className="subtitle">Inspired by Axelrod's model of social dynamics</p>
       </header>
 
-      {activeTab === 'simulate' && (
-        <SimulationPage
-          gridSize={gridSize}
-          setGridSize={setGridSize}
-          stepTime={stepTime}
-          setStepTime={setStepTime}
-          q={q}
-          setQ={setQ}
-          F={F}
-          setF={setF}
-          nodeFeatures={nodeFeatures}
-          setNodeFeatures={setNodeFeatures}
-          isSimulating={isSimulating}
-          setIsSimulating={setIsSimulating}
-          getNodeColor={getNodeColor}
-          gridConfig={gridConfig}
-          randomizeFeatures={randomizeFeatures}
-          metrics={metrics}
-          featureNames={featureNames}
-          setFeatureNames={setFeatureNames}
-          valueNames={valueNames}
-          setValueNames={setValueNames}
-          simulationMode={simulationMode}
-          setSimulationMode={setSimulationMode}
-          interpretableFeatures={interpretableFeatures}
-          setInterpretableFeatures={setInterpretableFeatures}
-          featureCorrelations={featureCorrelations}
-          setFeatureCorrelations={setFeatureCorrelations}
-        />
-      )}
-
-      {activeTab === 'math' && <MathPage />}
+      <Routes>
+        <Route path="/" element={
+          <SimulationPage
+            gridSize={gridSize}
+            setGridSize={setGridSize}
+            stepTime={stepTime}
+            setStepTime={setStepTime}
+            q={q}
+            setQ={setQ}
+            F={F}
+            setF={setF}
+            nodeFeatures={nodeFeatures}
+            setNodeFeatures={setNodeFeatures}
+            isSimulating={isSimulating}
+            setIsSimulating={setIsSimulating}
+            getNodeColor={getNodeColor}
+            gridConfig={gridConfig}
+            randomizeFeatures={randomizeFeatures}
+            metrics={metrics}
+            featureNames={featureNames}
+            setFeatureNames={setFeatureNames}
+            valueNames={valueNames}
+            setValueNames={setValueNames}
+            simulationMode={simulationMode}
+            setSimulationMode={setSimulationMode}
+            interpretableFeatures={interpretableFeatures}
+            setInterpretableFeatures={setInterpretableFeatures}
+            featureCorrelations={featureCorrelations}
+            setFeatureCorrelations={setFeatureCorrelations}
+          />
+        } />
+        <Route path="/math-behind" element={<MathPage />} />
+        <Route path="/case-studies" element={<MathPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </div>
   )
 }

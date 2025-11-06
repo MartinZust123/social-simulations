@@ -1,27 +1,30 @@
-function Navbar({ activeTab, setActiveTab }) {
+import { NavLink } from 'react-router-dom';
+
+function Navbar() {
   return (
     <nav className="navbar">
       <div className="nav-content">
         <div className="nav-logo">Social Simulations</div>
         <div className="nav-buttons">
-          <button
-            className={`nav-button ${activeTab === 'simulate' ? 'active' : ''}`}
-            onClick={() => setActiveTab('simulate')}
+          <NavLink
+            to="/"
+            className={({ isActive }) => `nav-button ${isActive ? 'active' : ''}`}
+            end
           >
             Simulate
-          </button>
-          <button
-            className={`nav-button ${activeTab === 'math' ? 'active' : ''}`}
-            onClick={() => setActiveTab('math')}
+          </NavLink>
+          <NavLink
+            to="/math-behind"
+            className={({ isActive }) => `nav-button ${isActive ? 'active' : ''}`}
           >
             Math Behind
-          </button>
-          <button
-            className={`nav-button ${activeTab === 'cases' ? 'active' : ''}`}
-            onClick={() => setActiveTab('cases')}
+          </NavLink>
+          <NavLink
+            to="/case-studies"
+            className={({ isActive }) => `nav-button ${isActive ? 'active' : ''}`}
           >
             Case Studies
-          </button>
+          </NavLink>
         </div>
       </div>
     </nav>
