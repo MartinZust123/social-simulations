@@ -4,6 +4,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import SimulationPage from './components/SimulationPage'
 import MathPage from './components/MathPage'
+import CaseStudiesPage from './components/CaseStudiesPage'
 
 function App() {
   const [gridSize, setGridSize] = useState(10);
@@ -502,7 +503,7 @@ function App() {
           />
         } />
         <Route path="/math-behind" element={<MathPage />} />
-        <Route path="/case-studies" element={<MathPage />} />
+        <Route path="/case-studies" element={<CaseStudiesPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
