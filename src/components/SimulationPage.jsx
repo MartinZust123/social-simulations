@@ -36,10 +36,17 @@ function SimulationPage({
   const [isGridInitialized, setIsGridInitialized] = useState(false);
   const tooltipTimeoutRef = useRef(null);
 
-  // Reset grid initialization when switching modes or when metrics are generated (simulation ended)
+  // Reset grid initialization when switching modes
   useEffect(() => {
     setIsGridInitialized(false);
-  }, [simulationMode, metrics]);
+  }, [simulationMode]);
+
+  // Reset grid initialization when simulation completes (metrics generated and simulation stopped)
+  useEffect(() => {
+    if (!isSimulating && metrics) {
+      setIsGridInitialized(false);
+    }
+  }, [isSimulating, metrics]);
 
   const handleParametersToggle = () => {
     if (isSimulating) {
