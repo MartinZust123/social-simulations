@@ -1178,6 +1178,81 @@
   .feature-naming-group {
     padding: 0.75rem;
   }
+
+  .interpretable-features-section {
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  .interpretable-feature-card {
+    padding: 0.75rem;
+  }
+
+  .interpretable-feature-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .interpretable-feature-name-input {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .remove-feature-button {
+    width: 28px;
+    height: 28px;
+  }
+
+  .interpretable-state-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .state-name-with-color {
+    width: 100%;
+  }
+
+  .interpretable-state-name-input {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .template-buttons {
+    gap: 0.5rem;
+  }
+
+  .template-button {
+    padding: 0.5rem 0.875rem;
+    font-size: 0.8125rem;
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: 0;
+  }
+
+  .correlations-section {
+    padding: 1rem;
+  }
+
+  .correlation-item {
+    gap: 0.5rem;
+  }
+
+  .correlation-label {
+    font-size: 0.8125rem;
+  }
+
+  .add-feature-button {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .features-info-section {
+    padding: 0.625rem 0.875rem;
+  }
+
+  .features-info-label {
+    font-size: 0.875rem;
+  }
 }
 
 /* Small Mobile */
