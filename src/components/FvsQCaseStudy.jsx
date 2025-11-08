@@ -102,15 +102,16 @@ function FvsQCaseStudy() {
           To test these theoretical predictions empirically, we conducted a comprehensive series of simulations on a 10×10 grid (100 agents). We systematically varied both F (number of features) and q (number of trait values per feature) across a range of values, running multiple simulations for each combination of parameters.
         </p>
         <p className="math-text">
-          For each parameter combination, we ran 50 independent simulations with randomly initialized cultural configurations. Each simulation was allowed to run until reaching an absorbing state—a configuration where no further cultural change is possible because neighboring agents either share all features (and thus have no cultural influence on each other) or share no features (and thus cannot interact).
+          Specifically, we tested F values from 2 to 10 (9 values) and q values from 2 to 20 (19 values), creating 171 unique parameter combinations. For each combination, we ran 100 independent simulations with randomly initialized cultural configurations, totaling 17,100 simulation runs. Each simulation was allowed to run until reaching an absorbing state—a configuration where no further cultural change is possible because neighboring agents either share all features (and thus have no cultural influence on each other) or share no features (and thus cannot interact).
         </p>
         <p className="math-text">
-          We collected three key metrics from each simulation:
+          We collected four key metrics from each simulation:
         </p>
         <ul className="math-text" style={{marginLeft: '2rem', marginTop: '0.5rem'}}>
-          <li><strong>Probability of consensus:</strong> The fraction of simulations that ended with all agents sharing identical cultural features</li>
-          <li><strong>Convergence time:</strong> The number of interaction steps required to reach the absorbing state</li>
-          <li><strong>Number of unique cultures:</strong> The count of distinct cultural configurations in the final absorbing state</li>
+          <li><strong>Steps to convergence:</strong> The number of interaction steps required to reach the absorbing state</li>
+          <li><strong>Number of unique cultures:</strong> The count of distinct cultural configurations in the final absorbing state (1 = global consensus, 100 = complete polarization)</li>
+          <li><strong>Largest domain size:</strong> The size and percentage of the largest cultural cluster</li>
+          <li><strong>Average cultural distance:</strong> The mean difference between neighboring agents (0 = identical, 1 = completely different)</li>
         </ul>
 
         <h3 className="math-subheading">Results: Probability of Consensus</h3>
