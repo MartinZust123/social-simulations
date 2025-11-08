@@ -1,7 +1,13 @@
+import { Link } from 'react-router-dom';
+import './CaseStudiesPage.css';
+
 function FvsQCaseStudy() {
   return (
     <main className="math-content">
       <div className="math-section">
+        <Link to="/case-studies" className="back-to-case-studies">
+          ← Back to Case Studies
+        </Link>
         <h2 className="math-heading">F vs. q on 10×10 Grid</h2>
 
         <h3 className="math-subheading">The Question</h3>
