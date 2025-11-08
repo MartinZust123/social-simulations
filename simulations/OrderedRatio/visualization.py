@@ -41,51 +41,54 @@ def load_raw_data(filename=None):
     return pd.read_csv(filename)
 
 
-def create_bar_plot_convergence_time(data, filename='bar_convergence_time.png'):
+def create_bar_plot_convergence_time(data, filename='line_convergence_time.png'):
     """
-    Bar plot: Ordered ratio (%) vs. average convergence time
+    Line plot with points: Ordered ratio (%) vs. average convergence time
 
     Args:
         data: pandas DataFrame with aggregated results
         filename: Output filename
     """
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 7))
+    plt.style.use('seaborn-v0_8-whitegrid')
 
-    # Create bar plot
-    bars = plt.bar(
+    # Create line plot with error bars
+    plt.errorbar(
         data['ordered_ratio'],
         data['steps_mean'],
         yerr=data['steps_std'],
-        capsize=5,
-        color='#4ECDC4',
-        edgecolor='black',
-        linewidth=1.5,
-        alpha=0.8
+        fmt='o-',
+        markersize=14,
+        linewidth=3,
+        color='#3b82f6',
+        markerfacecolor='#3b82f6',
+        markeredgecolor='white',
+        markeredgewidth=3,
+        elinewidth=2,
+        capsize=8,
+        capthick=2,
+        label='Mean ± Std Dev'
     )
 
-    plt.xlabel('Ordered Features Ratio (%)', fontsize=14, fontweight='bold')
-    plt.ylabel('Average Convergence Time (steps)', fontsize=14, fontweight='bold')
-    plt.title('Effect of Ordered Features Ratio on Convergence Time', fontsize=16, fontweight='bold', pad=20)
-    plt.grid(True, alpha=0.3, axis='y')
-    plt.xticks(data['ordered_ratio'], fontsize=12)
-    plt.yticks(fontsize=12)
-
-    # Add value labels on bars
-    for bar in bars:
-        height = bar.get_height()
-        plt.text(bar.get_x() + bar.get_width()/2., height,
-                f'{height:.0f}',
-                ha='center', va='bottom', fontsize=10, fontweight='bold')
+    plt.xlabel('Ordered Features Ratio (%)', fontsize=16, fontweight='bold')
+    plt.ylabel('Average Convergence Time (steps)', fontsize=16, fontweight='bold')
+    plt.title('Convergence Speed: Ordered vs Unordered Features',
+              fontsize=18, fontweight='bold', pad=20)
+    plt.grid(True, alpha=0.3, linestyle='--', linewidth=1)
+    plt.xticks(data['ordered_ratio'], [f"{int(x)}%" for x in data['ordered_ratio']], fontsize=13)
+    plt.yticks(fontsize=13)
+    plt.legend(fontsize=13, loc='best', framealpha=0.95, edgecolor='gray')
 
     plt.tight_layout()
 
     # Save figure
     output_path = os.path.join(config.PLOTS_DIR, filename)
     os.makedirs(config.PLOTS_DIR, exist_ok=True)
-    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white')
     plt.close()
+    plt.style.use('default')
 
-    print(f"Saved bar plot: {output_path}")
+    print(f"Saved line plot: {output_path}")
 
 
 def create_bar_plot_unique_cultures(data, filename='bar_unique_cultures.png'):
@@ -96,90 +99,114 @@ def create_bar_plot_unique_cultures(data, filename='bar_unique_cultures.png'):
         data: pandas DataFrame with aggregated results
         filename: Output filename
     """
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 7))
+    plt.style.use('seaborn-v0_8-darkgrid')
+
+    # Create gradient colors from green to orange
+    colors = ['#10b981', '#34d399', '#fbbf24', '#fb923c', '#f97316']
 
     # Create bar plot
     bars = plt.bar(
         data['ordered_ratio'],
         data['unique_cultures_mean'],
         yerr=data['unique_cultures_std'],
-        capsize=5,
-        color='#FF6B6B',
-        edgecolor='black',
-        linewidth=1.5,
-        alpha=0.8
+        capsize=7,
+        color=colors,
+        edgecolor='white',
+        linewidth=2,
+        alpha=0.9,
+        width=15
     )
 
-    plt.xlabel('Ordered Features Ratio (%)', fontsize=14, fontweight='bold')
-    plt.ylabel('Average Unique Cultures', fontsize=14, fontweight='bold')
-    plt.title('Effect of Ordered Features Ratio on Cultural Diversity', fontsize=16, fontweight='bold', pad=20)
-    plt.grid(True, alpha=0.3, axis='y')
-    plt.xticks(data['ordered_ratio'], fontsize=12)
-    plt.yticks(fontsize=12)
+    plt.xlabel('Ordered Features Ratio (%)', fontsize=16, fontweight='bold')
+    plt.ylabel('Average Number of Unique Cultures', fontsize=16, fontweight='bold')
+    plt.title('Cultural Diversity: Impact of Ordered Features',
+              fontsize=18, fontweight='bold', pad=20)
+    plt.grid(True, alpha=0.25, axis='y', linestyle='--', linewidth=1)
+    plt.xticks(data['ordered_ratio'], [f"{int(x)}%" for x in data['ordered_ratio']], fontsize=13)
+    plt.yticks(fontsize=13)
 
     # Add value labels on bars
     for bar in bars:
         height = bar.get_height()
-        plt.text(bar.get_x() + bar.get_width()/2., height,
+        plt.text(bar.get_x() + bar.get_width()/2., height * 1.02,
                 f'{height:.1f}',
-                ha='center', va='bottom', fontsize=10, fontweight='bold')
+                ha='center', va='bottom', fontsize=11, fontweight='bold')
 
     plt.tight_layout()
 
     # Save figure
     output_path = os.path.join(config.PLOTS_DIR, filename)
-    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white')
     plt.close()
+    plt.style.use('default')
 
     print(f"Saved bar plot: {output_path}")
 
 
-def create_line_plot_cultural_distance(data, filename='line_cultural_distance.png'):
+def create_line_plot_cultural_distance(data, filename='area_cultural_distance.png'):
     """
-    Line plot: Ordered ratio (%) vs. average cultural distance
+    Area plot with filled region: Ordered ratio (%) vs. average cultural distance
 
     Args:
         data: pandas DataFrame with aggregated results
         filename: Output filename
     """
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 7))
+    plt.style.use('seaborn-v0_8-whitegrid')
 
-    # Create line plot with error bands
-    plt.plot(
+    # Create area plot with gradient fill
+    plt.fill_between(
         data['ordered_ratio'],
+        0,
         data['avg_distance_mean'],
-        marker='o',
-        markersize=10,
-        linewidth=3,
-        color='#45B7D1',
+        alpha=0.4,
+        color='#8b5cf6',
         label='Mean Cultural Distance'
     )
 
-    # Add error bands
+    # Add line on top
+    plt.plot(
+        data['ordered_ratio'],
+        data['avg_distance_mean'],
+        marker='s',
+        markersize=11,
+        linewidth=3,
+        color='#6d28d9',
+        markerfacecolor='#8b5cf6',
+        markeredgecolor='white',
+        markeredgewidth=2.5
+    )
+
+    # Add error bands on top
     plt.fill_between(
         data['ordered_ratio'],
         data['avg_distance_mean'] - data['avg_distance_std'],
         data['avg_distance_mean'] + data['avg_distance_std'],
-        alpha=0.3,
-        color='#45B7D1'
+        alpha=0.2,
+        color='#6d28d9',
+        label='± Standard Deviation'
     )
 
-    plt.xlabel('Ordered Features Ratio (%)', fontsize=14, fontweight='bold')
-    plt.ylabel('Average Cultural Distance', fontsize=14, fontweight='bold')
-    plt.title('Effect of Ordered Features Ratio on Cultural Distance', fontsize=16, fontweight='bold', pad=20)
-    plt.grid(True, alpha=0.3)
-    plt.xticks(data['ordered_ratio'], fontsize=12)
-    plt.yticks(fontsize=12)
-    plt.legend(fontsize=12, loc='best')
+    plt.xlabel('Ordered Features Ratio (%)', fontsize=16, fontweight='bold')
+    plt.ylabel('Average Cultural Distance', fontsize=16, fontweight='bold')
+    plt.title('Cultural Homogeneity: Ordered vs Unordered Features',
+              fontsize=18, fontweight='bold', pad=20)
+    plt.grid(True, alpha=0.3, linestyle='--', linewidth=1)
+    plt.xticks(data['ordered_ratio'], [f"{int(x)}%" for x in data['ordered_ratio']], fontsize=13)
+    plt.yticks(fontsize=13)
+    plt.ylim(bottom=0)
+    plt.legend(fontsize=13, loc='best', framealpha=0.95, edgecolor='gray')
 
     plt.tight_layout()
 
     # Save figure
     output_path = os.path.join(config.PLOTS_DIR, filename)
-    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white')
     plt.close()
+    plt.style.use('default')
 
-    print(f"Saved line plot: {output_path}")
+    print(f"Saved area plot: {output_path}")
 
 
 def create_box_plot_convergence_distribution(raw_data, filename='box_convergence_distribution.png'):

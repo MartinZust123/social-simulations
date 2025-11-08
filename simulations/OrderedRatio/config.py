@@ -7,15 +7,16 @@ GRID_SIZE = 10  # 10x10 grid = 100 nodes
 
 # Feature parameters (constant total features)
 TOTAL_FEATURES = 5
-STATES_PER_FEATURE = 4
+STATES_PER_FEATURE = 7
 
 # Ordered ratio configurations to test
 # Each configuration specifies (ordered_features, unordered_features)
 RATIO_CONFIGS = [
     (5, 0),  # 100% ordered (5 ordered, 0 unordered)
-    (4, 1),  # 75% ordered (4 ordered, 1 unordered)
-    (3, 2),  # 50% ordered (3 ordered, 2 unordered)
-    (1, 4),  # 25% ordered (1 ordered, 4 unordered)
+    (4, 1),  # 80% ordered (4 ordered, 1 unordered)
+    (3, 2),  # 60% ordered (3 ordered, 2 unordered)
+    (2, 3),  # 40% ordered (2 ordered, 3 unordered)
+    (1, 4),  # 20% ordered (1 ordered, 4 unordered)
     (0, 5),  # 0% ordered (0 ordered, 5 unordered)
 ]
 
@@ -29,11 +30,13 @@ MAX_STEPS = 1000000
 # This will be a 5x5 matrix of zeros
 CORRELATIONS = [[0.0 for _ in range(TOTAL_FEATURES)] for _ in range(TOTAL_FEATURES)]
 
-# Output paths
-RESULTS_DIR = "results"
-RAW_DATA_FILE = "results/raw_data.csv"
-AGGREGATED_DATA_FILE = "results/aggregated_data.csv"
-PLOTS_DIR = "results/plots"
+# Output paths (relative to this script's directory)
+import os as _os
+_SCRIPT_DIR = _os.path.dirname(_os.path.abspath(__file__))
+RESULTS_DIR = _os.path.join(_SCRIPT_DIR, "results")
+RAW_DATA_FILE = _os.path.join(_SCRIPT_DIR, "results", "raw_data.csv")
+AGGREGATED_DATA_FILE = _os.path.join(_SCRIPT_DIR, "results", "aggregated_data.csv")
+PLOTS_DIR = _os.path.join(_SCRIPT_DIR, "results", "plots")
 
 # Random seed for reproducibility
 RANDOM_SEED = 42
@@ -69,7 +72,10 @@ def get_feature_configs(ordered_count, unordered_count):
                 {'name': 'State A', 'color': '#FF6B6B'},
                 {'name': 'State B', 'color': '#4ECDC4'},
                 {'name': 'State C', 'color': '#45B7D1'},
-                {'name': 'State D', 'color': '#FFA07A'}
+                {'name': 'State D', 'color': '#FFA07A'},
+                {'name': 'State E', 'color': '#A29BFE'},
+                {'name': 'State F', 'color': '#FD79A8'},
+                {'name': 'State G', 'color': '#55EFC4'}
             ]
         })
 
@@ -82,7 +88,10 @@ def get_feature_configs(ordered_count, unordered_count):
                 {'name': 'Type A', 'color': '#96CEB4'},
                 {'name': 'Type B', 'color': '#FFEAA7'},
                 {'name': 'Type C', 'color': '#DFE6E9'},
-                {'name': 'Type D', 'color': '#74B9FF'}
+                {'name': 'Type D', 'color': '#74B9FF'},
+                {'name': 'Type E', 'color': '#81ECEC'},
+                {'name': 'Type F', 'color': '#FAB1A0'},
+                {'name': 'Type G', 'color': '#FDCB6E'}
             ]
         })
 

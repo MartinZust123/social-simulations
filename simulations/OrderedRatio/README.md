@@ -7,15 +7,16 @@ This case study investigates how the **ratio of ordered to unordered features** 
 - **Research Question**: How does the proportion of ordered (spectrum-based) vs. unordered (categorical) features affect equilibrium outcomes in cultural dissemination?
 - **Grid Size**: 10×10 (100 agents)
 - **Total Features**: 5 (constant across all configurations)
-- **States per Feature**: 4
+- **States per Feature**: 7
 - **Ratio Configurations**:
   1. 100% ordered: 5 ordered, 0 unordered features
-  2. 75% ordered: 4 ordered, 1 unordered feature
-  3. 50% ordered: 3 ordered, 2 unordered features
-  4. 25% ordered: 1 ordered, 4 unordered features
-  5. 0% ordered: 0 ordered, 5 unordered features
+  2. 80% ordered: 4 ordered, 1 unordered feature
+  3. 60% ordered: 3 ordered, 2 unordered features
+  4. 40% ordered: 2 ordered, 3 unordered features
+  5. 20% ordered: 1 ordered, 4 unordered features
+  6. 0% ordered: 0 ordered, 5 unordered features
 - **Simulations per Configuration**: 200 runs
-- **Total Simulations**: 1,000 (5 configurations × 200 runs)
+- **Total Simulations**: 1,200 (6 configurations × 200 runs)
 - **Correlations**: All set to 0 (no feature correlations)
 
 ## Key Innovation: Interpretable Model
@@ -24,18 +25,18 @@ This study uses an **interpretable variant** of the Axelrod model that treats or
 
 ### Ordered Features (Spectrum-based)
 - **Naming**: "Spectrum Feature 1", "Spectrum Feature 2", etc.
-- **States**: "State A", "State B", "State C", "State D"
+- **States**: "State A", "State B", "State C", "State D", "State E", "State F", "State G"
 - **Adoption Rule**: **One-step transitions** toward the dominator
   - If dominator has a higher state, receiver moves up one step
   - If dominator has a lower state, receiver moves down one step
-  - Example: State A → State B → State C → State D (gradual change)
+  - Example: State A → State B → State C → State D → State E → State F → State G (gradual change)
 
 ### Unordered Features (Categorical)
 - **Naming**: "Category Feature 1", "Category Feature 2", etc.
-- **States**: "Type A", "Type B", "Type C", "Type D"
+- **States**: "Type A", "Type B", "Type C", "Type D", "Type E", "Type F", "Type G"
 - **Adoption Rule**: **Complete adoption** from the dominator
   - Receiver immediately adopts dominator's state
-  - Example: Type A → Type C (instant change)
+  - Example: Type A → Type G (instant change)
 
 This mirrors real-world cultural traits where some features (like political ideology, religiosity) change gradually along a spectrum, while others (like language, nationality) change completely.
 
@@ -97,9 +98,9 @@ For each simulation, we track:
 
 The script generates the following plots in `results/plots/`:
 
-1. **bar_convergence_time.png** - Bar plot showing ordered ratio vs. average convergence time
-2. **bar_unique_cultures.png** - Bar plot showing ordered ratio vs. average unique cultures
-3. **line_cultural_distance.png** - Line plot showing ordered ratio vs. average cultural distance
+1. **line_convergence_time.png** - Line plot with error bars showing ordered ratio vs. average convergence time
+2. **bar_unique_cultures.png** - Bar chart showing ordered ratio vs. average unique cultures
+3. **area_cultural_distance.png** - Area plot with filled region showing ordered ratio vs. average cultural distance
 4. **box_convergence_distribution.png** - Box plot showing distribution of convergence times for each ratio
 5. **scatter_convergence_vs_cultures.png** - Scatter plot of convergence time vs. unique cultures, colored by ratio
 6. **summary_table.png** - Summary statistics table for all configurations

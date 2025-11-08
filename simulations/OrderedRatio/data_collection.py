@@ -192,6 +192,19 @@ def aggregate_data(results):
     Returns:
         List of aggregated statistics per configuration
     """
+    # Check if data has required columns
+    if not results:
+        print("Error: No results to aggregate")
+        return []
+
+    if 'ordered_features' not in results[0]:
+        print("\nError: Old data format detected!")
+        print("The existing CSV file is from a previous version and is incompatible.")
+        print("Please either:")
+        print("  1. Delete the results/raw_data.csv file and run new simulations")
+        print("  2. Answer 'n' when asked to use existing data")
+        raise ValueError("Incompatible data format: missing 'ordered_features' column")
+
     # Group by (ordered_features, unordered_features)
     groups = {}
 
