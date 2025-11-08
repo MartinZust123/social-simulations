@@ -6,6 +6,7 @@ import SimulationPage from './components/SimulationPage'
 import MathPage from './components/MathPage'
 import CaseStudiesPage from './components/CaseStudiesPage'
 import FvsQCaseStudy from './components/FvsQCaseStudy'
+import OrderedRatioCaseStudy from './components/OrderedRatioCaseStudy'
 
 function App() {
   const [gridSize, setGridSize] = useState(10);
@@ -506,6 +507,7 @@ function App() {
         <Route path="/math-behind" element={<MathPage />} />
         <Route path="/case-studies" element={<CaseStudiesPage />} />
         <Route path="/case-studies/f-vs-q" element={<FvsQCaseStudy />} />
+        <Route path="/case-studies/ordered-ratio" element={<OrderedRatioCaseStudy />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>

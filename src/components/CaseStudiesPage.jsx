@@ -10,8 +10,16 @@ const caseStudies = [
     date: 'January 2025',
     readTime: '8 min read',
     tags: ['Consensus', 'Parameter Study', 'Phase Transitions']
+  },
+  {
+    id: 'ordered-ratio',
+    title: 'Ordered vs Unordered Features',
+    description: 'How do gradual versus instant cultural changes shape society? We investigate whether political ideology-like spectrum features converge faster than binary choices.',
+    image: '/case-studies/line_convergence_time.png',
+    date: 'January 2025',
+    readTime: '7 min read',
+    tags: ['Gradual Change', 'Cultural Dynamics', 'Convergence']
   }
-  // Add more case studies here in the future
 ];
 
 function CaseStudiesPage() {
