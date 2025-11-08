@@ -4,7 +4,13 @@
       "Bash(npm install:*)",
       "Bash(node:*)",
       "Bash(curl:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(uv venv:*)",
+      "Bash(uv pip install:*)",
+      "Bash(python:*)",
+      "Bash(grep:*)",
+      "Bash(az account:*)",
+      "Bash(dos2unix:*)"
     ],
     "deny": [],
     "ask": []
