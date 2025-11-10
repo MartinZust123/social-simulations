@@ -4,16 +4,16 @@ Configuration file for Grid Size Impact Analysis Case Study
 
 # Fixed parameters
 F = 5  # Number of cultural features per agent
-Q = 15  # Number of possible values per feature
+Q = 8  # Number of possible values per feature
 
 # Grid sizes to test
-GRID_SIZES = [5, 10, 15, 20, 25]
+GRID_SIZES = [4, 6, 8, 10, 12, 14, 16, 18, 20]
 
 # Number of simulation runs per grid size
-RUNS_PER_SIZE = 100
+RUNS_PER_SIZE = 500
 
 # Maximum simulation steps (safety limit to prevent infinite loops)
-MAX_STEPS = 1000000
+MAX_STEPS = 2000000
 
 # Output paths
 RESULTS_DIR = "results"

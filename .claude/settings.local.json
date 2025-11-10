@@ -10,7 +10,9 @@
       "Bash(python:*)",
       "Bash(grep:*)",
       "Bash(az account:*)",
-      "Bash(dos2unix:*)"
+      "Bash(dos2unix:*)",
+      "Bash(pip install:*)",
+      "Bash(where python)"
     ],
     "deny": [],
     "ask": []

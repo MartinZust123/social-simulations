@@ -21,6 +21,16 @@ const caseStudies = [
     date: 'November 2025',
     readTime: '7 min read',
     tags: ['Gradual Change', 'Cultural Dynamics', 'Convergence']
+  },
+  {
+    id: 'grid-size',
+    title: 'Population Size and Consensus',
+    author: 'Martin Žust',
+    description: 'Does a bigger parliament debate longer? We examine how population size affects both the probability of reaching consensus and the time required, revealing a surprising cubic scaling law.',
+    image: '/case-studies/bar_global_consensus.png',
+    date: 'November 2025',
+    readTime: '10 min read',
+    tags: ['Scaling', 'Population Effects', 'Convergence Time']
   }
 ];
 

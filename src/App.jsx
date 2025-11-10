@@ -7,6 +7,7 @@ import MathPage from './components/MathPage'
 import CaseStudiesPage from './components/CaseStudiesPage'
 import FvsQCaseStudy from './components/FvsQCaseStudy'
 import OrderedRatioCaseStudy from './components/OrderedRatioCaseStudy'
+import GridSizeCaseStudy from './components/GridSizeCaseStudy'
 import Footer from './components/Footer'
 
 function App() {
@@ -509,6 +510,7 @@ function App() {
         <Route path="/case-studies" element={<CaseStudiesPage />} />
         <Route path="/case-studies/f-vs-q" element={<FvsQCaseStudy />} />
         <Route path="/case-studies/ordered-ratio" element={<OrderedRatioCaseStudy />} />
+        <Route path="/case-studies/grid-size" element={<GridSizeCaseStudy />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Footer />
