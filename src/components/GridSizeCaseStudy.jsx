@@ -91,7 +91,7 @@ function GridSizeCaseStudy() {
         </div>
 
         <p className="math-text">
-          The probability of global consensus was only 0.29 (29%) for a 5×5 grid (25 agents) but grew rapidly, reaching 0.90 (90%) by 15×15 (225 agents). The growth then slows but continues increasing, with 20×20 (400 agents) achieving 0.94 (94%) consensus probability, and 25×25 (625 agents) reaching 0.96 (96%).
+          The probability of global consensus was only 0.29 (29%) for a 5×5 grid (25 agents) but grew rapidly, reaching 0.90 (90%) by 15×15 (225 agents). The growth then slows but continues increasing, with 20×20 (400 agents) achieving 0.94 (94%) consensus probability.
         </p>
         <p className="math-text">
           Why does this happen? The key insight is that in larger populations, there are more opportunities for cultural bridges to form. Even if many agents start with incompatible cultures, the sheer number of agents increases the likelihood that adjacent pairs will find common ground. These initial agreements then cascade through the network, eventually pulling the entire population toward consensus.
@@ -159,7 +159,7 @@ function GridSizeCaseStudy() {
           <strong>1. Larger Populations Favor Consensus</strong>
         </p>
         <p className="math-text">
-          Contrary to the intuition that "small groups align better," larger populations are significantly more likely to reach global consensus. This happens because larger grids provide more opportunities for cultural bridges to form, creating multiple pathways around potential deadlocks. The probability of consensus increases from 29% (5×5) to 96% (25×25)—a dramatic improvement.
+          Contrary to the intuition that "small groups align better," larger populations are significantly more likely to reach global consensus. This happens because larger grids provide more opportunities for cultural bridges to form, creating multiple pathways around potential deadlocks. The probability of consensus increases from 29% (5×5) to 94% (20×20)—a dramatic improvement.
         </p>
 
         <p className="math-text">
