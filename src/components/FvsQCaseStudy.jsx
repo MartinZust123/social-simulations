@@ -9,6 +9,9 @@ function FvsQCaseStudy() {
           ← Back to Case Studies
         </Link>
         <h2 className="math-heading">F vs. q on 10×10 Grid</h2>
+        <p className="math-text" style={{fontSize: '0.95rem', color: '#6b7280', fontStyle: 'italic', marginBottom: '2rem'}}>
+          By Martin Žust
+        </p>
 
         <h3 className="math-subheading">The Question</h3>
         <p className="math-text">
