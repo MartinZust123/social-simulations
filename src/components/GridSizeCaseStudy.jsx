@@ -87,7 +87,7 @@ function GridSizeCaseStudy() {
         </p>
 
         <div className="math-formula" style={{padding: '1rem', background: '#f8f9fa', borderRadius: '8px', margin: '1.5rem 0', textAlign: 'center'}}>
-          <img src="/case-studies/bar_global_consensus.png" alt="Bar chart showing probability of global consensus vs grid size" style={{maxWidth: '100%', height: 'auto', borderRadius: '4px'}} />
+          <img src="/case-studies/grid-size/bar_global_consensus.png" alt="Bar chart showing probability of global consensus vs grid size" style={{maxWidth: '100%', height: 'auto', borderRadius: '4px'}} />
         </div>
 
         <p className="math-text">
@@ -106,7 +106,7 @@ function GridSizeCaseStudy() {
         </p>
 
         <div className="math-formula" style={{padding: '1rem', background: '#f8f9fa', borderRadius: '8px', margin: '1.5rem 0', textAlign: 'center'}}>
-          <img src="/case-studies/line_convergence_time.png" alt="Line plot showing convergence time vs grid size with error bars" style={{maxWidth: '100%', height: 'auto', borderRadius: '4px'}} />
+          <img src="/case-studies/grid-size/line_convergence_time.png" alt="Line plot showing convergence time vs grid size with error bars" style={{maxWidth: '100%', height: 'auto', borderRadius: '4px'}} />
         </div>
 
         <p className="math-text">
@@ -125,7 +125,7 @@ function GridSizeCaseStudy() {
         </p>
 
         <div className="math-formula" style={{padding: '1rem', background: '#f8f9fa', borderRadius: '8px', margin: '1.5rem 0', textAlign: 'center'}}>
-          <img src="/case-studies/scaling_approximations.png" alt="Comparison of linear, quadratic, cubic and exponential approximations" style={{maxWidth: '100%', height: 'auto', borderRadius: '4px'}} />
+          <img src="/case-studies/grid-size/scaling_approximations.png" alt="Comparison of linear, quadratic, cubic and exponential approximations" style={{maxWidth: '100%', height: 'auto', borderRadius: '4px'}} />
         </div>
 
         <p className="math-text">
@@ -147,7 +147,7 @@ function GridSizeCaseStudy() {
         </p>
 
         <div className="math-formula" style={{padding: '1rem', background: '#f8f9fa', borderRadius: '8px', margin: '1.5rem 0', textAlign: 'center'}}>
-          <img src="/case-studies/summary_table.png" alt="Summary statistics table for all grid sizes" style={{maxWidth: '100%', height: 'auto', borderRadius: '4px'}} />
+          <img src="/case-studies/grid-size/summary_table.png" alt="Summary statistics table for all grid sizes" style={{maxWidth: '100%', height: 'auto', borderRadius: '4px'}} />
         </div>
 
         <h3 className="math-subheading">Discussion</h3>
